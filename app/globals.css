@@ -6,8 +6,13 @@
 @theme {
   --color-main-dark: #0B0D10;
   --animate-flare-fade: flareFade 7s ease-in-out infinite;
+  --animate-dark-flare-fade: darkFlareFade 7s ease-in-out infinite;
 }
 @keyframes flareFade {
   0%, 100% { opacity: 0.15; }
   50% { opacity: 0.26; }
+}
+@keyframes darkFlareFade {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
