@@ -1,5 +1,7 @@
 export default function page() {
   return (
-    <div>page</div>
+    <div className="bg-main-dark w-full min-h-screen">
+      
+    </div>
   )
 }
