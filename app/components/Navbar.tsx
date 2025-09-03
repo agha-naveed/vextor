@@ -8,21 +8,23 @@ export default function Navbar() {
     return (
         <nav className="fixed top-0 text-white flex justify-between w-full px-10 py-8">
             <div className="container mx-auto flex justify-between items-center">
-                <div>
-                    <Image src={logo} alt="Vextor AI Logo" className="w-[150px]" />
-                </div>
+                <Link href={"/"} title="Vextor AI - Home">
+                    <Image src={logo} alt="Vextor AI Logo" className="select-none w-[150px]" />
+                </Link>
                 <ul className="flex gap-10">
-                    <li>
-                        <Link href="/">Docs</Link>
+                    <li style={{
+                        // textShadow: "0 0 10px white",
+                    }}>
+                        <Link href="/" className="transition-all hover:text-shadow-[0_0_25px_#ffffff87]">Docs</Link>
                     </li>
                     <li>
-                        <Link href="/">Updates</Link>
+                        <Link href="/" className="transition-all hover:text-shadow-[0_0_25px_#ffffff87]">Updates</Link>
                     </li>
                     <li>
-                        <Link href="/">Blog</Link>
+                        <Link href="/" className="transition-all hover:text-shadow-[0_0_25px_#ffffff87]">Blog</Link>
                     </li>
                     <li>
-                        <Link href="/">FAQ</Link>
+                        <Link href="/" className="transition-all hover:text-shadow-[0_0_25px_#ffffff87]">FAQ</Link>
                     </li>
                 </ul>
                 <div className="relative inline-block z-10 group">
