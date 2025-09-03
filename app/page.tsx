@@ -4,7 +4,7 @@ import { FaWindows } from "react-icons/fa";
 import flare from "@/images/purpleFlare.png"
 import Image from "next/image";
 
-export default function page() {
+export default function Page() {
   const { isDarkMode } = useThemeContext();
   return (
     <div className={`${isDarkMode ? "bg-main-dark" : "bg-white"} w-full`}>
