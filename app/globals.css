@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
 @theme {
   --color-main-dark: #0B0D10;
+  --animate-flare-fade: flareFade 7s ease-in-out infinite;
+}
+@keyframes flareFade {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.26; }
 }
