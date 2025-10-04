@@ -3,12 +3,14 @@ import { useThemeContext } from "./components/ThemeContext";
 import { FaWindows } from "react-icons/fa";
 import flare from "@/images/purpleFlare.png"
 import Image from "next/image";
+import headerBg from "@/images/headerSpiralBg.svg"
 
 export default function Page() {
   const { isDarkMode } = useThemeContext();
   return (
-    <div className={`${isDarkMode ? "bg-main-dark" : "bg-white"} w-full`}>
+    <div className={`${isDarkMode ? "bg-main-dark" : "bg-white"} w-full relative`}>
       <header className="container mx-auto h-full min-h-screen flex flex-col justify-center items-center relative">
+        <Image src={headerBg} loading="lazy" className="absolute top-0 left-1/2 -translate-x-1/2 w-[70%] opacity-50" alt="" />
         <div className="relative text-center">
           <div className="relative z-20">
             <h1 className={`text-[80px] font-bold ${isDarkMode ? "text-white" : "text-black"}`}>Vextor AI Code Editor</h1>
@@ -21,7 +23,7 @@ export default function Page() {
               </button>
             </div>
           </div>
-          <Image src={flare} alt="flare" className={`absolute -top-40 ${isDarkMode ? "animate-flare-fade" : "animate-dark-flare-fade"} left-1/2 -translate-x-1/2 w-full h-auto select-none z-0 outline-none`} />
+          <Image src={flare} alt="flare" loading="lazy" className={`absolute -top-40 ${isDarkMode ? "animate-flare-fade" : "animate-dark-flare-fade"} left-1/2 -translate-x-1/2 w-full h-auto select-none z-0 outline-none`} />
         </div>
       </header>
     </div>
