@@ -11,7 +11,7 @@ export default function Navbar() {
     const { isDarkMode, toggleDarkMode } = useThemeContext();
 
     return (
-        <nav className={`fixed top-0 flex justify-between w-full px-10 py-8 z-[1000] ${isDarkMode ? "text-white" : "text-black"}`}>
+        <nav className={`fixed top-0 flex justify-between w-full px-10 py-8 z-[10000] ${isDarkMode ? "text-white" : "text-black"}`}>
             <div className="container mx-auto flex justify-between items-center">
                 <Link href={"/"} title="Vextor AI - Home" className="flex gap-4 items-center select-none">
                     <Image src={logo} alt="Vextor AI Logo" className="w-[35px]" />

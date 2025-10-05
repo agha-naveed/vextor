@@ -9,8 +9,10 @@ export default function Page() {
   const { isDarkMode } = useThemeContext();
   return (
     <div className={`${isDarkMode ? "bg-main-dark" : "bg-white"} w-full relative`}>
-      <header className="container mx-auto h-full min-h-screen flex flex-col justify-center items-center relative">
-        <Image src={headerBg} loading="lazy" className="absolute top-0 left-1/2 -translate-x-1/2 w-[70%] opacity-50" alt="" />
+      <video src={"/img/videoplayback1.webm"} muted autoPlay loop className="w-full absolute top-0 mix-blend-screen opacity-10"></video>
+      <div className="bg-blur w-full absolute top-0 bg-purple-900/10 backdrop-blur-[3px] h-full z-[999]"></div>
+      <header className="container mx-auto h-full min-h-screen flex flex-col justify-center items-center relative z-[99999]">
+        <Image src={headerBg} loading="lazy" className="absolute top-0 left-1/2 -translate-x-1/2 mix-blend-soft-light w-[80%] opacity-4" alt="" />
         <div className="relative text-center">
           <div className="relative z-20">
             <h1 className={`text-[80px] font-bold ${isDarkMode ? "text-white" : "text-black"}`}>Vextor AI Code Editor</h1>
