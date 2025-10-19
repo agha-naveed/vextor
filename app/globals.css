@@ -10,12 +10,12 @@
 }
 @keyframes flareFade {
   0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.26; }
+  50% { opacity: 0.18; }
 }
 @keyframes darkFlareFade {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 body {
-  background: rgba(255, 255, 255, 0.733);
+  background: linear-gradient(135deg, rgb(19, 19, 19) 0%, rgb(35, 36, 37) 25%, rgb(88, 88, 88) 50%, rgb(7, 7, 7) 100%);
 }
