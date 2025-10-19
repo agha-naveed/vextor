@@ -3,14 +3,16 @@ import { useThemeContext } from "./components/ThemeContext";
 import { FaWindows } from "react-icons/fa";
 import flare from "@/images/purpleFlare.png"
 import Image from "next/image";
-import headerBg from "@/images/headerSpiralBg.svg"
 
 export default function Page() {
   const { isDarkMode } = useThemeContext();
   return (
     <div className={`${isDarkMode ? "bg-main-dark" : "bg-white"} w-full relative`}>
+      <div className="w-full min-h-screen absolute top-0 left-0 " style={{backgroundImage: "linear-gradient(135deg, rgb(243, 244, 246) 0%, rgb(229, 231, 235) 25%, rgb(215, 215, 219) 50%, rgb(40, 44, 52) 100%)"}}></div>
+      <div className="absolute inset-0"
+        style={{backgroundImage: "linear-gradient(to right, rgba(220, 220, 230, 0.15) 1px, transparent 1px), linear-gradient(rgba(220, 220, 230, 0.15) 1px, transparent 1px)", backgroundSize: "30px 30px"}}></div>
       <header className="container mx-auto h-full min-h-screen flex flex-col justify-center items-center relative z-[99999]">
-        <Image src={headerBg} loading="lazy" className="absolute top-0 left-1/2 -translate-x-1/2 mix-blend-soft-light w-[80%] opacity-4" alt="" />
+        
         <div className="relative text-center">
           <div className="relative z-20">
             <h1 className={`text-[80px] font-bold ${isDarkMode ? "text-white" : "text-black"}`}>Vextor AI Code Editor</h1>
