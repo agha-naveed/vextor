@@ -16,9 +16,11 @@ export default function Page() {
         
       }
       <div className="absolute inset-0 opacity-20"
-        style={{backgroundImage: "linear-gradient(to right, rgba(220, 220, 230, 0.15) 1px, transparent 1px), linear-gradient(rgba(220, 220, 230, 0.15) 1px, transparent 1px)", backgroundSize: "30px 30px"}}></div>
+        style={{backgroundImage: "linear-gradient(to right, rgba(220, 220, 230, 0.15) 1px, transparent 1px), linear-gradient(rgba(220, 220, 230, 0.15) 1px, transparent 1px)", backgroundSize: "30px 30px", zIndex: "1000"}}></div>
+
 
       <header className="container mx-auto h-full min-h-screen flex flex-col justify-center items-center relative z-[99999]">
+
         
         <div className="relative text-center">
           <div className="relative z-20">
@@ -29,13 +31,12 @@ export default function Page() {
             
 
             <h4 className={`uppercase text-[28px] ${isDarkMode ? "text-white" : "text-black"} relative -top-1 tracking-wider`}>Shift your coding direction</h4>
-            <div className="relative inline-block z-10 group mt-7" title="Download Vextor for Windows">
-              <div style={{transition: "0.2s linear"}} className="absolute inset-0 z-[-1] rounded-md blur-xl bg-gradient-to-r from-[#3185ff] to-[#bc5bf9] opacity-0 group-hover:opacity-20"></div>
-              <button className="flex gap-2 items-center bg-gradient-to-r from-[#3185ff] to-[#bc5bf9] py-3 px-6 rounded-lg bg-[length:200%_100%] bg-left hover:bg-right transition-background-position duration-500 text-xl  hover:rounded-full cursor-pointer text-white">
-                <FaWindows />
-                Download for Windows
-              </button>
-            </div>
+            <button className="flex gap-2 items-center bg-gradient-to-r from-[#3185ff] to-[#bc5bf9] py-3 px-6 rounded-lg  bg-left hover:bg-right text-xl cursor-pointer text-white mt-7 center_btn" title="Download Vextor for Windows">
+              {/* bg-[length:200%_100%] */}
+              <FaWindows />
+              Download for Windows
+            </button>
+            
           </div>
         </div>
       </header>

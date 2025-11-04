@@ -20,3 +20,13 @@
 ::selection {
   background-color: #582bac;
 }
+
+.center_btn {
+  border-radius: 10px;
+  animation-duration: background-position 500ms;
+  transition: background-position 0.5s ease-out;
+  transition: border-radius 0.2 ease-out;
+  &:hover {
+    border-radius: 27px;
+  }
+}
