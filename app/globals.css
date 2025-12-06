@@ -9,8 +9,8 @@
   --animate-dark-flare-fade: darkFlareFade 7s ease-in-out infinite;
 }
 @keyframes flareFade {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.18; }
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.15; }
 }
 @keyframes darkFlareFade {
   0%, 100% { opacity: 0.5; }
