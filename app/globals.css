@@ -2,7 +2,9 @@
 
 * {
   box-sizing: border-box;
+  font-family: var(--font-DM-Sans);
 }
+
 @theme {
   --color-main-dark: #0B0D10;
   --animate-flare-fade: flareFade 7s ease-in-out infinite;
@@ -25,7 +27,7 @@
   border-radius: 10px;
   animation-duration: background-position 500ms;
   transition: background-position 0.5s ease-out;
-  transition: border-radius 0.2 ease-out;
+  transition: border-radius 0.2s ease-out;
   &:hover {
     border-radius: 27px;
   }

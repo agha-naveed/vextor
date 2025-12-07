@@ -24,13 +24,13 @@ export default function Page() {
         <div className="relative text-center">
           <div className="relative z-20 place-items-center">
             
-            <h1 className={`text-[80px] font-bold ${isDarkMode ? "text-white" : "text-black"}`}>Vextor AI Code Editor</h1>
+            <h1 className={`text-[80px] font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>Vextor AI Code Editor</h1>
 
             <Image src={flare} alt="flare" loading="lazy" className={`absolute -top-80 -right-90 ${isDarkMode ? "animate-flare-fade" : "animate-dark-flare-fade"} w-full h-auto select-none z-[-1] outline-none`} />
             
 
             <h4 className={`uppercase text-[28px] ${isDarkMode ? "text-white" : "text-black"} relative -top-1 tracking-wider`}>Shift your coding direction</h4>
-            <button className="flex gap-2 items-center bg-gradient-to-r from-[#3185ff] to-[#bc5bf9] py-3 px-6 rounded-lg  bg-left hover:bg-right bg-[length:200%_100%] text-xl cursor-pointer text-white mt-7 center_btn" title="Download Vextor for Windows">
+            <button className="flex gap-2 items-center bg-gradient-to-r from-[#3185ff] to-[#bc5bf9] py-3 px-6 rounded-lg bg-left hover:bg-right bg-[length:200%_100%] text-xl cursor-pointer text-white mt-7 center_btn" title="Download Vextor for Windows">
               {/* bg-[length:200%_100%] */}
               <FaWindows />
               Download for Windows
