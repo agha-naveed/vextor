@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  box-sizing: border-box;
+}
+@theme {
+  --color-main-dark: #0B0D10;
+  --animate-flare-fade: flareFade 7s ease-in-out infinite;
+  --animate-dark-flare-fade: darkFlareFade 7s ease-in-out infinite;
+}
+@keyframes flareFade {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.15; }
+}
+@keyframes darkFlareFade {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+::selection {
+  background-color: #582bac;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.center_btn {
+  border-radius: 10px;
+  animation-duration: background-position 500ms;
+  transition: background-position 0.5s ease-out;
+  transition: border-radius 0.2 ease-out;
+  &:hover {
+    border-radius: 27px;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
