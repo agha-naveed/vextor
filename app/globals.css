@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-main: black;
+  --color-main: #F5F9FA;
 }
 
 .dark {
-  --color-main: white;
+  --color-main: #101920;
+}
+
+* {
+  font-family: "open-sans";
 }
