@@ -10,7 +10,7 @@ import Footer from "./components/Footer"
 export default function page() {
 
   return (
-    <div className="bg-main h-screen">
+    <div>
       <div className="container mx-auto">
         <Navbar />
         <Hero />
