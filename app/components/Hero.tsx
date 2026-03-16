@@ -2,7 +2,7 @@
 export default function Hero() {
     return (
         <header className="text-center pt-24 pb-16 px-4 relative z-10">
-            <h1 className="text-3xl md:text-5xl font-roboto! lg:text-6xl text-white dark:text-orange-500 font-bold mb-6 leading-[62px]">
+            <h1 className="text-3xl md:text-5xl font-roboto! lg:text-6xl dark:text-white text-orange-500 font-bold mb-6 leading-[62px]">
                 THE INTELLIGENT IDE: <br />
                 CODE SMARTER, FASTER, TOGETHER.
             </h1>

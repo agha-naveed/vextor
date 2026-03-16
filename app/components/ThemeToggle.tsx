@@ -8,13 +8,13 @@ export default function ThemeToggle() {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = React.useState(false)
 
-    // React.useEffect(() => {
-    //     setMounted(true)
-    // }, [])
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
 
-    // if (!mounted) {
-    //     return <div className="hidden lg:block w-14 h-7 rounded-full bg-[#13151f] border border-white/10" />
-    // }
+    if (!mounted) {
+        return <div className="hidden lg:block w-14 h-7 rounded-full bg-[#13151f] border border-white/10" />
+    }
 
     const isDark = theme === "dark" || theme === "system"
 

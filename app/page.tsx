@@ -1,5 +1,4 @@
 "use client"
-import { useTheme } from "next-themes"
 import Navbar from "./components/Navbar"
 import Hero from "./components/Hero"
 import IdeMockup from "./components/IdeMockup"
