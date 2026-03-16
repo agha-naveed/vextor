@@ -5,9 +5,9 @@
 }
 
 .dark {
-  --color-main: #101920;
+  --color-main: #090A0F;
 }
 
 * {
-  font-family: "open-sans";
+  font-family: var(--font-open-sans);
 }
