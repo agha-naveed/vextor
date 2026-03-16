@@ -9,7 +9,6 @@ import DocsAndIntegrations from "./components/DocsAndIntegrations"
 import Footer from "./components/Footer"
 
 export default function page() {
-  const { theme, setTheme } = useTheme()
 
   return (
     <div className="bg-main h-screen">

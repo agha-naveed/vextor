@@ -1,13 +1,15 @@
-import lightLogo from "@/images/light-logo.png"
+import logo from "@/images/logo.png"
 import { Search } from 'lucide-react';
-import ThemeToggle from './ThemeToggle'; // Import your new toggle
+import ThemeToggle from './ThemeToggle';
 import Image from "next/image";
 
 export default function Navbar() {
+
     return (
         <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b dark:border-white/5 border-black/5">
-            <div className="w-40">
-                <Image src={lightLogo} alt="Vextor Logo" />
+            <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+                <Image src={logo} className="w-8" alt="Vextor Logo" />
+                VEXTOR AI
             </div>
 
             <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -19,7 +21,6 @@ export default function Navbar() {
 
             <div className="flex items-center gap-4">
 
-                {/* Animated Theme Toggle */}
                 <ThemeToggle />
 
                 <div className="relative hidden md:block">
