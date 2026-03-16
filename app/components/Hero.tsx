@@ -3,7 +3,7 @@ import React from 'react';
 export default function Hero() {
     return (
         <header className="text-center pt-24 pb-16 px-4 relative z-10">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-5xl font-roboto! lg:text-6xl font-bold text-white mb-6 leading-[62px]">
                 THE INTELLIGENT IDE: <br />
                 CODE SMARTER, FASTER, TOGETHER.
             </h1>

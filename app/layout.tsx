@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Open_Sans, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/theme-provider";
 
 const openSans = Open_Sans({
-  variable: "--font-open-sans",
+  variable: "--font-openSans",
   subsets: ["latin"],
 });
-
+const roboto = Roboto_Condensed({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${openSans.variable} antialiased`}
+        className={`${openSans.variable} ${roboto.variable} antialiased`}
       >
         <Providers>
           {children}

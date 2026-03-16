@@ -2,6 +2,7 @@
 
 @theme {
   --color-main: #F5F9FA;
+  --font-roboto: var(--font-roboto);
 }
 
 .dark {
@@ -9,5 +10,5 @@
 }
 
 * {
-  font-family: var(--font-open-sans);
+  font-family: var(--font-openSans);
 }

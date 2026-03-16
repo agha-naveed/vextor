@@ -20,7 +20,7 @@ export default function Community() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {users.map((user, i) => (
                     <div key={i} className="bg-[#11141d] p-5 rounded-xl border border-white/5 flex gap-4 items-center">
-                        <div className="w-12 h-12 rounded-full bg-slate-800 flex-shrink-0"></div>
+                        <div className="w-12 h-12 rounded-full bg-slate-800 shrink-0"></div>
                         <div>
                             <h4 className="text-white font-semibold text-sm">{user.name}</h4>
                             <p className="text-slate-500 text-xs">{user.role}</p>

@@ -1,38 +1,36 @@
-import { Search, SunMoon } from 'lucide-react';
+import lightLogo from "@/images/light-logo.png"
+import { Search } from 'lucide-react';
+import ThemeToggle from './ThemeToggle'; // Import your new toggle
+import Image from "next/image";
 
 export default function Navbar() {
     return (
-        <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b border-white/5">
-            <div className="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
-                <div className="w-8 h-8 rounded bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                </div>
-                VECTOR AI
+        <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b dark:border-white/5 border-black/5">
+            <div className="w-40">
+                <Image src={lightLogo} alt="Vextor Logo" />
             </div>
 
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-                <a href="#" className="hover:text-white transition-colors">Features</a>
-                <a href="#" className="hover:text-white transition-colors">Docs</a>
-                <a href="#" className="hover:text-white transition-colors">Community</a>
-                <a href="#" className="hover:text-white transition-colors">Pricing</a>
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Features</a>
+                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Docs</a>
+                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Community</a>
+                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</a>
             </div>
 
             <div className="flex items-center gap-4">
-                <div className="hidden lg:flex items-center gap-2 bg-[#13151f] rounded-full px-3 py-1.5 border border-white/10">
-                    <SunMoon className="w-4 h-4 text-slate-400" />
-                    <div className="w-4 h-4 rounded-full bg-indigo-500"></div>
-                </div>
+
+                {/* Animated Theme Toggle */}
+                <ThemeToggle />
+
                 <div className="relative hidden md:block">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                     <input
                         type="text"
                         placeholder="Search"
-                        className="bg-[#13151f] border border-white/10 rounded-full pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:border-indigo-500 text-white w-48"
+                        className="bg-white dark:bg-[#13151f] border border-slate-200 dark:border-white/10 rounded-full pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white w-48 transition-colors"
                     />
                 </div>
-                <button className="bg-[#1a1d29] hover:bg-[#252a3b] text-white px-5 py-2 rounded-md text-sm font-medium border border-white/5 transition-colors">
+                <button className="bg-slate-100 hover:bg-slate-200 dark:bg-[#1a1d29] dark:hover:bg-[#252a3b] text-slate-900 dark:text-white px-5 py-2 rounded-md text-sm font-medium border border-slate-200 dark:border-white/5 transition-colors">
                     Sign In
                 </button>
             </div>
