@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { X, Send, ShieldCheck, Terminal, Fingerprint, Activity } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { sendEmail } from "../actions";
 
 interface ContactOverlayProps {
     isOpen: boolean;
@@ -14,7 +15,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
     const overlayRef = useRef<HTMLDivElement>(null);
     const cardRef = useRef<HTMLDivElement>(null);
     const [userData, setUserData] = useState({ name: "", email: "", message: "" })
-
+    const [status, setStatus] = useState("");
     useGSAP(() => {
         if (isOpen) {
             const tl = gsap.timeline();
@@ -26,7 +27,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 duration: 0.5,
                 ease: "power2.out"
             })
-                // 2. Slide the wide landscape card in from the right
+
                 .fromTo(cardRef.current,
                     { x: 100, opacity: 0 },
                     { x: 0, opacity: 1, duration: 0.7, ease: "expo.out" },
@@ -44,19 +45,18 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
         }
     }, { dependencies: [isOpen] });
 
+
     async function sendData(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const response = await fetch("/api/messages", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(userData)
-        })
-
-        if (response.ok) {
-            setUserData({ name: "", email: "", message: "" });
-            onClose();
+        setStatus("sending");
+        console.log(userData)
+        const result = await sendEmail(userData);
+        console.log(result)
+        if (result.success) {
+            setStatus("success");
+        } else {
+            alert("System Error: Transmission Failed.");
+            setStatus("idle");
         }
     }
     return (
