@@ -21,7 +21,7 @@ export default function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="hidden lg:flex relative items-center cursor-pointer w-14 h-7 bg-[#13151f] rounded-full border border-white/10 hover:border-white/20 transition-colors focus:outline-none"
+            className={`hidden lg:flex relative items-center cursor-pointer w-14 h-7 ${theme == "dark" ? "bg-[#13151f] border-white/10 hover:border-white/20" : "bg-white border-black/10 hover:border-black/20"} rounded-full border transition-colors focus:outline-none`}
             aria-label="Toggle Dark Mode"
         >
             <div className="absolute w-full flex justify-between px-1.5 pointer-events-none">

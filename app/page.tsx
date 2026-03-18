@@ -11,15 +11,13 @@ export default function page() {
 
   return (
     <div>
-      <div className="container mx-auto">
-        <Navbar />
-        <Hero />
-        <IdeMockup />
-        <FeaturesGrid />
-        <Community />
-        <DocsAndIntegrations />
-        <Footer />
-      </div>
+      <Navbar />
+      <Hero />
+      <IdeMockup />
+      <FeaturesGrid />
+      <Community />
+      <DocsAndIntegrations />
+      <Footer />
     </div>
   )
 }

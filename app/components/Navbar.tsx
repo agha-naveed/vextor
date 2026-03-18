@@ -31,8 +31,8 @@ export default function Navbar() {
                         className="bg-white dark:bg-[#13151f] border border-slate-200 dark:border-white/10 rounded-full pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white w-48 transition-colors"
                     />
                 </div>
-                <button className="bg-slate-100 hover:bg-slate-200 dark:bg-[#1a1d29] dark:hover:bg-[#252a3b] text-slate-900 dark:text-white px-5 py-2 rounded-md text-sm font-medium border border-slate-200 dark:border-white/5 transition-colors">
-                    Sign In
+                <button className="bg-slate-100 hover:bg-slate-200 dark:bg-[#1a1d29] dark:hover:bg-[#252a3b] text-slate-900 dark:text-white px-5 py-2 rounded-md text-sm font-medium border border-slate-200 dark:border-white/5 transition-colors cursor-pointer">
+                    Download
                 </button>
             </div>
         </nav>

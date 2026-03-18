@@ -2,12 +2,12 @@ import { Box, Search, Gitlab, Sparkles } from 'lucide-react';
 
 export default function IdeMockup() {
     return (
-        <section className="relative max-w-5xl mx-auto px-4 mb-24">
+        <section className="relative max-w-5xl mx-auto px-4 mb-24 isolate">
             {/* Glow Effect */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-linear-to-r from-indigo-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl rounded-full pointer-events-none -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-linear-to-r from-indigo-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl rounded-full pointer-events-none z-0" />
 
             {/* Editor Container */}
-            <div className="rounded-xl overflow-hidden bg-[#0d1017] border border-indigo-500/30 shadow-2xl relative">
+            <div className="rounded-xl overflow-hidden bg-[#0d1017] border border-indigo-500/30 shadow-2xl relative z-20">
                 {/* Editor Header */}
                 <div className="h-8 bg-[#161a24] border-b border-white/5 flex items-center px-4 gap-2">
                     <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
