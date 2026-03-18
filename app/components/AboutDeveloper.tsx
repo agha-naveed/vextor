@@ -80,8 +80,8 @@ export default function AboutDeveloper() {
                             className="object-cover transition-transform duration-1000 group-hover:scale-105"
                         />
 
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-transparent opacity-90" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#06070a] via-transparent to-transparent opacity-40 lg:block hidden" />
+                        <div className="absolute inset-0 bg-linear-to-t from-[#06070a] via-transparent to-transparent opacity-90" />
+                        <div className="absolute inset-0 bg-linear-to-r from-[#06070a] via-transparent to-transparent opacity-40 lg:block hidden" />
 
                         <div className="absolute bottom-8 left-8 flex items-center gap-3 px-4 py-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full">
                             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_10px_#6366f1]" />
@@ -99,7 +99,7 @@ export default function AboutDeveloper() {
                         </div>
                         <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter leading-[0.9]">
                             Coding <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500 italic font-serif pr-4">
+                            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-500 italic font-serif pr-4">
                                 Alone.
                             </span>
                         </h2>
