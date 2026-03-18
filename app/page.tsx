@@ -35,13 +35,11 @@ export default function Page() {
   useGSAP(() => {
     heroTl.current = gsap.timeline({ paused: true });
 
-    // 1. Updated the target to '.gsap-hero-subtext' so it doesn't hide the <h1>
     heroTl.current
       .from(".gsap-hero-subtext", { opacity: 0, y: 20, duration: 0.6 })
       .from(".gsap-hero-btn", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, "-=0.3")
       .from(".gsap-ide", { opacity: 0, y: 40, duration: 1, ease: "power3.out" }, "-=0.2");
 
-    // Scroll Animations
     gsap.from(".gsap-feature-card", {
       scrollTrigger: {
         trigger: ".gsap-features-section",
@@ -69,10 +67,9 @@ export default function Page() {
     });
   }, { scope: container });
 
-  // 2. This is the new function that the Hero will call when typing finishes
   const handleTypingComplete = () => {
     if (heroTl.current) {
-      heroTl.current.play(); // Start the fade-ins!
+      heroTl.current.play();
       setTimeout(() => {
         ScrollTrigger.refresh();
       }, 100);

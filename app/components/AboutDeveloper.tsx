@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Quote, Zap, Fingerprint, Code2 } from "lucide-react";
 import myPic from "@/images/syed-naveed-dp.png"
-
+import ContactOverlay from "./ContactOverlay";
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
 export default function AboutDeveloper() {
     const container = useRef<HTMLDivElement>(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     useGSAP(() => {
         if (!container.current) return;
 
-        // 1. THE NAME SCROLL: Moves horizontally as the user scrolls vertically
         gsap.to(".scrolling-signature", {
             xPercent: -20,
             ease: "none",
@@ -26,7 +26,7 @@ export default function AboutDeveloper() {
                 trigger: container.current,
                 start: "top bottom",
                 end: "bottom top",
-                scrub: 1, // Smoothly ties it to the scrollbar
+                scrub: 1,
             }
         });
 
@@ -52,6 +52,7 @@ export default function AboutDeveloper() {
             }, "-=0.8");
 
     }, { scope: container });
+
 
     return (
         <section
@@ -142,7 +143,7 @@ export default function AboutDeveloper() {
                             <div className="text-slate-600 text-[10px] uppercase tracking-[0.4em] mt-2">Founder & Solo Engineer</div>
                         </div>
 
-                        <button className="group relative flex items-center gap-3 px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-full overflow-hidden transition-all duration-300 hover:pr-12">
+                        <button onClick={() => setIsOpen(true)} className="group relative flex items-center gap-3 px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-full overflow-hidden transition-all duration-300 hover:pr-12">
                             <span>Let's Build</span>
                             <Code2 className="w-4 h-4 absolute right-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
                         </button>
@@ -151,6 +152,10 @@ export default function AboutDeveloper() {
                 </div>
 
             </div>
+            <ContactOverlay
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            />
         </section>
     );
 }
