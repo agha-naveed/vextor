@@ -1,13 +1,27 @@
 "use client"
 
-export default function Hero() {
+import React, { useEffect, useRef, useState } from "react";
+
+interface TypewriterTextProps {
+    text: string;
+    speed?: number;
+    start?: boolean;
+    onComplete?: () => void;
+}
+
+export default function Hero({ startTyping = false, onTypingComplete }: { startTyping?: boolean, onTypingComplete?: () => void }) {
     return (
         <header className="text-center pt-24 pb-16 px-4 relative z-10">
             <div className="gsap-hero-text">
                 <h1 className="text-3xl md:text-5xl font-roboto! lg:text-6xl dark:text-white text-zinc-900 font-bold mb-6 leading-[62px] justify-items-center">
-                    THE INTELLIGENT IDE: <br /> CODE SMARTER, FASTER, TOGETHER.
+                    <TypewriterText
+                        text={"THE INTELLIGENT IDE:\nCODE SMARTER, FASTER, TOGETHER."}
+                        speed={50}
+                        start={startTyping}
+                        onComplete={onTypingComplete}
+                    />
                 </h1>
-                <p className="max-w-2xl mx-auto dark:text-slate-400 text-zinc-600 text-lg mb-10">
+                <p className="gsap-hero-subtext max-w-2xl mx-auto dark:text-slate-400 text-zinc-600 text-lg mb-10">
                     Code faster with AI-powered autocomplete, automated refactoring, and seamless team collaboration.
                 </p>
             </div>
@@ -22,3 +36,48 @@ export default function Hero() {
         </header>
     );
 }
+
+const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 50, start = false, onComplete }) => {
+    const [displayedText, setDisplayedText] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+
+    const onCompleteRef = useRef(onComplete);
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
+
+    useEffect(() => {
+        if (!start) return;
+
+        let currentLength = 0;
+        setDisplayedText("");
+        setIsTyping(true);
+
+        const typingInterval = setInterval(() => {
+            currentLength++;
+            setDisplayedText(text.substring(0, currentLength));
+
+            if (currentLength >= text.length) {
+                clearInterval(typingInterval);
+                setIsTyping(false);
+                if (onCompleteRef.current) onCompleteRef.current();
+            }
+        }, speed);
+
+        return () => clearInterval(typingInterval);
+    }, [text, speed, start]);
+
+    return (
+        <span className="text-3xl md:text-5xl font-roboto! lg:text-6xl dark:text-white text-zinc-900 font-bold mb-6 leading-[62px] justify-items-center">
+            {displayedText.split("\n").map((line, index, array) => (
+                <React.Fragment key={index}>
+                    {line}
+                    {index < array.length - 1 && <br />}
+                </React.Fragment>
+            ))}
+            {isTyping && (
+                <span className="inline-block w-[0.12em] h-[1em] bg-indigo-500 ml-1 align-text-bottom animate-pulse" />
+            )}
+        </span>
+    );
+};

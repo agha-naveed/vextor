@@ -1,13 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Preloader from "./components/Preloader";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+// ... your imports ...
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import Preloader from "./components/Preloader";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
 import IdeMockup from "./components/IdeMockup";
 import FeaturesGrid from "./components/FeaturesGrid";
 import Community from "./components/Community";
@@ -20,17 +21,12 @@ if (typeof window !== "undefined") {
 
 export default function Page() {
   const container = useRef<HTMLDivElement>(null);
-
-  // 1. We start by assuming the loader is NOT finished
   const [loaderFinished, setLoaderFinished] = useState(false);
   const heroTl = useRef<gsap.core.Timeline | null>(null);
 
-  // 2. Add an effect to check sessionStorage the moment the page loads
   useEffect(() => {
     const hasVisited = sessionStorage.getItem("vextor_visited");
-
     if (hasVisited) {
-      // If they've been here before, skip the loader immediately
       setLoaderFinished(true);
     }
   }, []);
@@ -38,11 +34,13 @@ export default function Page() {
   useGSAP(() => {
     heroTl.current = gsap.timeline({ paused: true });
 
+    // 1. Updated the target to '.gsap-hero-subtext' so it doesn't hide the <h1>
     heroTl.current
-      .from(".gsap-hero-text", { opacity: 0, y: 30, duration: 0.8 })
-      .from(".gsap-hero-btn", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, "-=0.4")
+      .from(".gsap-hero-subtext", { opacity: 0, y: 20, duration: 0.6 })
+      .from(".gsap-hero-btn", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, "-=0.3")
       .from(".gsap-ide", { opacity: 0, y: 40, duration: 1, ease: "power3.out" }, "-=0.2");
 
+    // Scroll Animations
     gsap.from(".gsap-feature-card", {
       scrollTrigger: {
         trigger: ".gsap-features-section",
@@ -52,18 +50,34 @@ export default function Page() {
       y: 30,
       duration: 0.6,
       stagger: 0.15,
-      ease: "power2.out"
+      ease: "power2.out",
     });
 
+    const fadeUpSections = gsap.utils.toArray(".gsap-fade-up", container.current) as HTMLElement[];
+    fadeUpSections.forEach((section) => {
+      gsap.from(section, {
+        scrollTrigger: {
+          trigger: section,
+          start: "top 85%",
+        },
+        opacity: 0,
+        y: 40,
+        duration: 0.8,
+        ease: "power2.out",
+      });
+    });
   }, { scope: container });
 
-  useEffect(() => {
-    if (loaderFinished && heroTl.current) {
-      heroTl.current.play();
+  // 2. This is the new function that the Hero will call when typing finishes
+  const handleTypingComplete = () => {
+    if (heroTl.current) {
+      heroTl.current.play(); // Start the fade-ins!
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
     }
-  }, [loaderFinished]);
+  };
 
-  // 3. Update our onComplete handler to save the visit in sessionStorage
   const handleLoaderComplete = () => {
     sessionStorage.setItem("vextor_visited", "true");
     setLoaderFinished(true);
@@ -71,14 +85,16 @@ export default function Page() {
 
   return (
     <div ref={container} className="relative overflow-hidden bg-[#090A0F]">
-
-      {/* 4. Only show the preloader if they haven't visited yet */}
-      {!loaderFinished && (
-        <Preloader onComplete={handleLoaderComplete} />
-      )}
+      {!loaderFinished && <Preloader onComplete={handleLoaderComplete} />}
 
       <Navbar />
-      <Hero />
+
+      {/* 3. Pass the callback into the Hero */}
+      <Hero
+        startTyping={loaderFinished}
+        onTypingComplete={handleTypingComplete}
+      />
+
       <IdeMockup />
       <FeaturesGrid />
       <Community />
