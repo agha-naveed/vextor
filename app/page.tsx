@@ -12,8 +12,9 @@ import Hero from "./components/Hero";
 import IdeMockup from "./components/IdeMockup";
 import FeaturesGrid from "./components/FeaturesGrid";
 import Community from "./components/Community";
-import DocsAndIntegrations from "./components/DocsAndIntegrations";
+import IntegrationGrid from "./components/IntegrationGrid";
 import Footer from "./components/Footer";
+import AboutDeveloper from "./components/AboutDeveloper";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -98,7 +99,8 @@ export default function Page() {
       <IdeMockup />
       <FeaturesGrid />
       <Community />
-      <DocsAndIntegrations />
+      <IntegrationGrid />
+      <AboutDeveloper />
       <Footer />
     </div>
   );

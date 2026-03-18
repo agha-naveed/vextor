@@ -53,18 +53,20 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 50, start
         setDisplayedText("");
         setIsTyping(true);
 
-        const typingInterval = setInterval(() => {
-            currentLength++;
-            setDisplayedText(text.substring(0, currentLength));
+        setTimeout(() => {
+            const typingInterval = setInterval(() => {
+                currentLength++;
+                setDisplayedText(text.substring(0, currentLength));
 
-            if (currentLength >= text.length) {
-                clearInterval(typingInterval);
-                setIsTyping(false);
-                if (onCompleteRef.current) onCompleteRef.current();
-            }
-        }, speed);
+                if (currentLength >= text.length) {
+                    clearInterval(typingInterval);
+                    setIsTyping(false);
+                    if (onCompleteRef.current) onCompleteRef.current();
+                }
+            }, speed);
 
-        return () => clearInterval(typingInterval);
+            return () => clearInterval(typingInterval);
+        }, 500)
     }, [text, speed, start]);
 
     return (
@@ -76,7 +78,17 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 50, start
                 </React.Fragment>
             ))}
             {isTyping && (
-                <span className="inline-block w-[0.12em] h-[1em] bg-indigo-500 ml-1 align-text-bottom animate-pulse" />
+                <>
+                    <span
+                        className="inline-block w-[0.12em] h-[1em] bg-indigo-500 ml-1 align-text-bottom"
+                        style={{ animation: "ideBlink 0.9s step-start infinite" }}
+                    />
+                    <style>{`
+            @keyframes ideBlink {
+              50% { opacity: 0; }
+            }
+          `}</style>
+                </>
             )}
         </span>
     );
