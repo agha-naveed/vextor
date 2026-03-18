@@ -9,9 +9,9 @@ export default function FeaturesGrid() {
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 mb-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section className="gsap-features-section max-w-7xl mx-auto px-6 mb-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, i) => (
-                <div key={i} className="bg-[#11141d] border border-white/5 p-6 rounded-xl hover:border-white/10 transition-colors">
+                <div key={i} className="gsap-feature-card bg-[#11141d] border border-white/5 p-6 rounded-xl hover:border-white/10 transition-colors">
                     <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${feature.bg}`}>
                         <feature.icon className={`w-6 h-6 ${feature.color}`} />
                     </div>

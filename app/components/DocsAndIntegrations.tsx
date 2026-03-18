@@ -12,7 +12,7 @@ export default function DocsAndIntegrations() {
     const integrations = [Github, Gitlab, Hexagon, Cloud, Box, Zap, Users, Wrench];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 mb-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section className="gsap-fade-up max-w-7xl mx-auto px-6 mb-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Docs Column */}
             <div>
                 <h3 className="text-xl font-bold text-white mb-6">Docs</h3>

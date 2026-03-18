@@ -6,7 +6,7 @@ export default function Community() {
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 mb-24">
+        <section className="gsap-fade-up max-w-7xl mx-auto px-6 mb-24">
             <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
                 <div>
                     <h2 className="text-2xl font-bold text-white mb-2">Community</h2>
