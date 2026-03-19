@@ -1,8 +1,10 @@
 "use client";
 
-import { FaGithub, FaTwitter, FaLinkedin, FaArrowUp } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaArrowUp } from "react-icons/fa";
 import logo from "@/images/logo.png"
 import Image from "next/image";
+import Link from "next/link";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -72,15 +74,15 @@ export default function Footer() {
 
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-4">
-                            <a href="#" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <Link href="https://github.com/agha-naveed" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                                 <FaGithub className="w-5 h-5" />
-                            </a>
-                            <a href="#" className="text-slate-400 hover:text-[#1DA1F2] transition-colors">
-                                <FaTwitter className="w-5 h-5" />
-                            </a>
-                            <a href="#" className="text-slate-400 hover:text-[#0A66C2] transition-colors">
+                            </Link>
+                            <Link href="https://x.com/naveed_kazmi31" className="text-slate-400 dark:hover:text-white hover:text-black transition-colors">
+                                <FaXTwitter className="w-5 h-5" />
+                            </Link>
+                            <Link href="https://linkedin.com/in/agha-naveed" className="text-slate-400 dark:hover:text-white hover:text-[#0A66C2] transition-colors">
                                 <FaLinkedin className="w-5 h-5" />
-                            </a>
+                            </Link>
                         </div>
 
                         <div className="w-px h-6 bg-slate-200 dark:bg-white/10 transition-colors" />
