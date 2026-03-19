@@ -74,13 +74,13 @@ export default function Footer() {
 
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-4">
-                            <Link href="https://github.com/agha-naveed" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <Link href="https://github.com/agha-naveed" target="_blank" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                                 <FaGithub className="w-5 h-5" />
                             </Link>
-                            <Link href="https://x.com/naveed_kazmi31" className="text-slate-400 dark:hover:text-white hover:text-black transition-colors">
+                            <Link href="https://x.com/naveed_kazmi31" target="_blank" className="text-slate-400 dark:hover:text-white hover:text-black transition-colors">
                                 <FaXTwitter className="w-5 h-5" />
                             </Link>
-                            <Link href="https://linkedin.com/in/agha-naveed" className="text-slate-400 dark:hover:text-white hover:text-[#0A66C2] transition-colors">
+                            <Link href="https://linkedin.com/in/agha-naveed" target="_blank" className="text-slate-400 dark:hover:text-white hover:text-[#0A66C2] transition-colors">
                                 <FaLinkedin className="w-5 h-5" />
                             </Link>
                         </div>
