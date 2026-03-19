@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { IoMoonOutline } from "react-icons/io5"
+import { HiOutlineSun } from "react-icons/hi"
 
 export default function ThemeToggle() {
     const { theme, setTheme } = useTheme()
@@ -25,8 +26,8 @@ export default function ThemeToggle() {
             aria-label="Toggle Dark Mode"
         >
             <div className="absolute w-full flex justify-between px-1.5 pointer-events-none">
-                <Moon className="w-3.5 h-3.5 text-slate-400" />
-                <Sun className="w-3.5 h-3.5 text-slate-400" />
+                <IoMoonOutline className="w-3.5 h-3.5 text-slate-400" />
+                <HiOutlineSun className="w-3.5 h-3.5 text-slate-400" />
             </div>
 
             <div

@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { X, Send, ShieldCheck, Terminal, Fingerprint, Activity } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { sendEmail } from "../actions";
@@ -9,7 +8,6 @@ import { IoCloseOutline } from "react-icons/io5";
 import { GoShieldCheck } from "react-icons/go";
 import { LuFingerprint, LuSend, LuTerminal } from "react-icons/lu";
 import { TbActivity } from "react-icons/tb";
-import { FaTerminal } from "react-icons/fa";
 
 interface ContactOverlayProps {
     isOpen: boolean;

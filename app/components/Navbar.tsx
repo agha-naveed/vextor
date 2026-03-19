@@ -1,7 +1,7 @@
 import logo from "@/images/logo.png"
-import { Search } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import Image from "next/image";
+import { BsSearch } from "react-icons/bs";
 
 export default function Navbar() {
 
@@ -24,7 +24,7 @@ export default function Navbar() {
                 <ThemeToggle />
 
                 <div className="relative hidden md:block">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+                    <BsSearch className="w-3.7 h-3.7 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                     <input
                         type="text"
                         placeholder="Search"

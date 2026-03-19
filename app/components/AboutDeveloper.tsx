@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Quote, Zap, Fingerprint, Code2 } from "lucide-react";
 import myPic from "@/images/syed-naveed-dp.png"
 import ContactOverlay from "./ContactOverlay";
+import { LuCodeXml, LuFingerprint, LuQuote, LuZap } from "react-icons/lu";
+
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
@@ -106,7 +107,7 @@ export default function AboutDeveloper() {
                     </div>
 
                     <div className="relative">
-                        <Quote className="absolute -top-10 -left-10 w-20 h-20 text-indigo-500/10 -z-10" />
+                        <LuQuote className="absolute -top-10 -left-10 w-20 h-20 text-indigo-500/10 -z-10" />
                         <p className="text-xl md:text-2xl text-slate-300 font-light leading-relaxed">
                             "Vextor AI isn't just a project—it's my answer to the friction of modern development.
                             As the sole developer, I don't compromise on speed, security, or the tiny details
@@ -117,7 +118,7 @@ export default function AboutDeveloper() {
                     <div className="grid grid-cols-2 gap-10 pt-4">
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 text-white font-bold uppercase text-[10px] tracking-widest">
-                                <Zap className="w-4 h-4 text-indigo-500" />
+                                <LuZap className="w-4 h-4 text-indigo-500" />
                                 Performance
                             </div>
                             <p className="text-slate-500 text-xs leading-relaxed">
@@ -126,7 +127,7 @@ export default function AboutDeveloper() {
                         </div>
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 text-white font-bold uppercase text-[10px] tracking-widest">
-                                <Fingerprint className="w-4 h-4 text-indigo-500" />
+                                <LuFingerprint className="w-4 h-4 text-indigo-500" />
                                 Integrity
                             </div>
                             <p className="text-slate-500 text-xs leading-relaxed">
@@ -145,7 +146,7 @@ export default function AboutDeveloper() {
 
                         <button onClick={() => setIsOpen(true)} className="group relative flex items-center gap-3 px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-full overflow-hidden transition-all duration-300 hover:pr-12">
                             <span>Let's Build</span>
-                            <Code2 className="w-4 h-4 absolute right-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                            <LuCodeXml className="w-4 h-4 absolute right-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
                         </button>
                     </div>
 

@@ -1,11 +1,11 @@
-import { Sparkles, Wrench, Users, Zap } from 'lucide-react';
+import { LuSparkles, LuUsers, LuWrench, LuZap } from 'react-icons/lu';
 
 export default function FeaturesGrid() {
     const features = [
-        { icon: Sparkles, title: "PREDICTIVE AUTOCOMPLETE", color: "text-purple-400", bg: "bg-purple-400/10" },
-        { icon: Wrench, title: "SMART REFACTORING", color: "text-blue-400", bg: "bg-blue-400/10" },
-        { icon: Users, title: "REAL-TIME PAIR PROGRAMMING", color: "text-amber-400", bg: "bg-amber-400/10" },
-        { icon: Zap, title: "EXTENSIVE INTEGRATIONS", color: "text-emerald-400", bg: "bg-emerald-400/10" }
+        { icon: LuSparkles, title: "PREDICTIVE AUTOCOMPLETE", color: "text-purple-400", bg: "bg-purple-400/10" },
+        { icon: LuWrench, title: "SMART REFACTORING", color: "text-blue-400", bg: "bg-blue-400/10" },
+        { icon: LuUsers, title: "REAL-TIME PAIR PROGRAMMING", color: "text-amber-400", bg: "bg-amber-400/10" },
+        { icon: LuZap, title: "EXTENSIVE INTEGRATIONS", color: "text-emerald-400", bg: "bg-emerald-400/10" }
     ];
 
     return (
