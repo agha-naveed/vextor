@@ -5,6 +5,11 @@ import { X, Send, ShieldCheck, Terminal, Fingerprint, Activity } from "lucide-re
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { sendEmail } from "../actions";
+import { IoCloseOutline } from "react-icons/io5";
+import { GoShieldCheck } from "react-icons/go";
+import { LuFingerprint, LuSend, LuTerminal } from "react-icons/lu";
+import { TbActivity } from "react-icons/tb";
+import { FaTerminal } from "react-icons/fa";
 
 interface ContactOverlayProps {
     isOpen: boolean;
@@ -77,21 +82,21 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                     <div className="absolute -top-20 -left-20 w-40 h-40 bg-indigo-600/20 blur-[60px] rounded-full" />
 
                     <div>
-                        <Terminal className="w-10 h-10 text-indigo-500 mb-6" />
+                        <LuTerminal className="w-12 h-12 text-indigo-500 mb-6" />
                         <h2 className="text-2xl font-bold text-white tracking-tighter mb-2">System Access</h2>
                         <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em]">Direct Node // Syed Naveed Abbas</p>
                     </div>
 
                     <div className="space-y-6">
                         <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-white/5"><Fingerprint className="w-4 h-4 text-indigo-400" /></div>
+                            <div className="p-2 rounded-lg bg-white/5"><LuFingerprint className="w-4 h-4 text-indigo-400" /></div>
                             <div>
                                 <div className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Identity</div>
                                 <div className="text-xs text-white font-mono">SOLO_ARCHITECT</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-white/5"><Activity className="w-4 h-4 text-emerald-500" /></div>
+                            <div className="p-2 rounded-lg bg-white/5"><TbActivity className="w-4 h-4 text-emerald-500" /></div>
                             <div>
                                 <div className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Status</div>
                                 <div className="text-xs text-emerald-400 font-mono">ONLINE_READY</div>
@@ -106,7 +111,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                         onClick={onClose}
                         className="absolute top-8 right-8 text-slate-600 hover:text-white transition-colors"
                     >
-                        <X className="w-6 h-6" />
+                        <IoCloseOutline className="w-6 h-6 cursor-pointer" />
                     </button>
 
                     <form className="space-y-8" onSubmit={sendData}>
@@ -146,11 +151,11 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
 
                         <div className="flex items-center justify-between gap-8 pt-4">
                             <div className="flex items-center gap-2 text-[9px] font-mono text-slate-600 uppercase tracking-widest">
-                                <ShieldCheck className="w-4 h-4 text-indigo-500" /> Secure Protocol 2.0.4
+                                <GoShieldCheck className="w-4 h-4 text-indigo-500" /> Secure Protocol 2.0.4
                             </div>
-                            <button className="group px-10 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-xl transition-all flex items-center gap-4 shadow-[0_0_30px_rgba(79,70,229,0.3)]">
+                            <button className="group px-10 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-xl transition-all flex items-center gap-4 shadow-[0_0_30px_rgba(79,70,229,0.3)] cursor-pointer">
                                 <span>Transmit</span>
-                                <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                                <LuSend className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                             </button>
                         </div>
                     </form>

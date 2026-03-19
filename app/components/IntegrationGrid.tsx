@@ -1,26 +1,30 @@
 "use client";
 
 import { useRef } from "react";
-import {
-    Database, Cloud, Box, Hexagon, Globe,
-    Github, Gitlab, BoxSelect, Bot, Users, Cpu
-} from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { FaDocker, FaJava, FaMarkdown, FaPython, FaRust } from "react-icons/fa";
+import { VscJson } from "react-icons/vsc";
+import { FiGithub } from "react-icons/fi";
+import { IoLogoJavascript } from "react-icons/io";
+import { TbBrandCpp } from "react-icons/tb";
+import { DiRedis } from "react-icons/di";
+import { FaGolang } from "react-icons/fa6";
+import { IoCodeSlashSharp } from "react-icons/io5";
 
 const integrations = [
-    { icon: Database, name: "Prisma" },
-    { icon: Cloud, name: "GCP" },
-    { icon: Box, name: "Docker" },
-    { icon: Hexagon, name: "Supabase" },
-    { icon: Cpu, name: "Neural" },
-    { icon: Globe, name: "PlanetScale" },
-    { icon: Github, name: "GitHub" },
-    { icon: Gitlab, name: "GitLab" },
-    { icon: BoxSelect, name: "Vercel" },
-    { icon: Bot, name: "OpenAI" },
-    { icon: Users, name: "Clerk" },
-    { icon: Database, name: "Redis" },
+    { icon: IoLogoJavascript, name: "JavaScript" },
+    { icon: FaPython, name: "Python" },
+    { icon: VscJson, name: "JSON" },
+    { icon: FaDocker, name: "Docker" },
+    { icon: FaJava, name: "Java" },
+    { icon: TbBrandCpp, name: "C++" },
+    { icon: FaRust, name: "Rust" },
+    { icon: FaGolang, name: "Go" },
+    { icon: FiGithub, name: "GitHub" },
+    { icon: IoCodeSlashSharp, name: "HTML" },
+    { icon: DiRedis, name: "Redis" },
+    { icon: FaMarkdown, name: "Markdown" },
 ];
 
 export default function IntegrationGrid() {
