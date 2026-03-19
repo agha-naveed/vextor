@@ -4,7 +4,6 @@ import Image from "next/image";
 import { BsSearch } from "react-icons/bs";
 
 export default function Navbar() {
-
     return (
         <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b dark:border-white/5 border-black/5">
             <div className="flex items-center gap-2 font-bold text-xl tracking-tight">

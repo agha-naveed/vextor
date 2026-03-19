@@ -81,12 +81,10 @@ export default function Page() {
   };
 
   return (
-    <div ref={container} className="relative overflow-hidden bg-[#090A0F]">
+    <div ref={container} className="relative overflow-hidden dark:bg-[#090A0F] bg-main">
       {!loaderFinished && <Preloader onComplete={handleLoaderComplete} />}
 
       <Navbar />
-
-      {/* 3. Pass the callback into the Hero */}
       <Hero
         startTyping={loaderFinished}
         onTypingComplete={handleTypingComplete}
