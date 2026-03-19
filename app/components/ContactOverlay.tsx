@@ -23,7 +23,6 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
         if (isOpen) {
             const tl = gsap.timeline();
 
-            // 1. Darken and blur the entire website
             tl.to(overlayRef.current, {
                 display: "flex",
                 opacity: 1,
@@ -67,16 +66,13 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
             ref={overlayRef}
             className="fixed inset-0 z-10000 hidden items-center justify-center bg-zinc-950/70 backdrop-blur-3xl opacity-0"
         >
-            {/* Click backdrop to close */}
             <div className="absolute inset-0" onClick={onClose} />
 
             <div
                 ref={cardRef}
                 className="relative w-full max-w-5xl mx-6 bg-[#090A0F] border border-white/10 rounded-4xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] grid grid-cols-1 md:grid-cols-12"
             >
-                {/* LEFT PANEL: SYSTEM ID (4 Columns) */}
                 <div className="md:col-span-4 bg-[#0D0E14] p-10 border-r border-white/5 flex flex-col justify-between relative overflow-hidden">
-                    {/* Decorative Glow */}
                     <div className="absolute -top-20 -left-20 w-40 h-40 bg-indigo-600/20 blur-[60px] rounded-full" />
 
                     <div>

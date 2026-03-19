@@ -13,17 +13,16 @@ export async function sendEmail(formData: { name: String, email: String, message
 
     try {
         await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'VextorAI <onboarding@resend.dev>',
             to: 'naveedabs31@gmail.com',
-            replyTo: email as string,
+            replyTo: `${email}`,
             subject: `New Connection Request from ${name}`,
-            text: `
-                SYSTEM NOTIFICATION: NEW LEAD
-                -----------------------------
-                NAME: ${name}
-                EMAIL: ${email} 
-                MESSAGE: ${message}
-                -----------------------------
+            text: `SYSTEM NOTIFICATION: NEW LEAD
+            -----------------------------
+            NAME: ${name}
+            EMAIL: ${email} 
+            MESSAGE: ${message}
+            -----------------------------
             `,
         });
         return { success: true };
