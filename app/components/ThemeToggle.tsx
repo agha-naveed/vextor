@@ -6,7 +6,8 @@ import { IoMoonOutline } from "react-icons/io5"
 import { HiOutlineSun } from "react-icons/hi"
 
 export default function ThemeToggle() {
-    const { theme, setTheme } = useTheme()
+    // 🚀 Add resolvedTheme here
+    const { theme, setTheme, resolvedTheme } = useTheme()
     const [mounted, setMounted] = React.useState(false)
 
     React.useEffect(() => {
@@ -17,12 +18,13 @@ export default function ThemeToggle() {
         return <div className="hidden lg:block w-14 h-7 rounded-full bg-[#13151f] border border-white/10" />
     }
 
-    const isDark = theme === "dark" || theme === "system"
+    // 🚀 Use resolvedTheme for the source of truth!
+    const isDark = resolvedTheme === "dark"
 
     return (
         <button
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className={`hidden lg:flex relative items-center cursor-pointer w-14 h-7 ${theme == "dark" ? "bg-[#13151f] border-white/10 hover:border-white/20" : "bg-white border-black/10 hover:border-black/20"} rounded-full border transition-colors focus:outline-none`}
+            className={`hidden lg:flex relative items-center cursor-pointer w-14 h-7 ${isDark ? "bg-[#13151f] border-white/10 hover:border-white/20" : "bg-white border-black/10 hover:border-black/20"} rounded-full border transition-colors focus:outline-none`}
             aria-label="Toggle Dark Mode"
         >
             <div className="absolute w-full flex justify-between px-1.5 pointer-events-none">

@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Preloader from "./components/Preloader";
-import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import IdeMockup from "./components/IdeMockup";
 import FeaturesGrid from "./components/FeaturesGrid";
@@ -81,10 +80,9 @@ export default function Page() {
   };
 
   return (
-    <div ref={container} className="relative overflow-hidden dark:bg-[#090A0F] bg-main">
+    <div ref={container} className="relative overflow-hidden">
       {!loaderFinished && <Preloader onComplete={handleLoaderComplete} />}
 
-      <Navbar />
       <Hero
         startTyping={loaderFinished}
         onTypingComplete={handleTypingComplete}

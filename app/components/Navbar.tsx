@@ -2,20 +2,21 @@ import logo from "@/images/logo.png"
 import ThemeToggle from './ThemeToggle';
 import Image from "next/image";
 import { BsSearch } from "react-icons/bs";
+import Link from "next/link";
 
 export default function Navbar() {
     return (
-        <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b dark:border-white/5 border-black/5">
+        <nav className="flex items-center justify-between px-6 py-4 bg-main max-w-screen-2xl mx-auto border-b dark:border-white/5 border-black/5 w-full">
             <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
                 <Image src={logo} className="w-8" alt="Vextor Logo" />
                 VEXTOR AI
             </div>
 
             <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Features</a>
-                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Docs</a>
-                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Community</a>
-                <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</a>
+                <Link href="/features" className="hover:text-slate-900 dark:hover:text-white transition-colors">Features</Link>
+                <Link href="/docs" className="hover:text-slate-900 dark:hover:text-white transition-colors">Docs</Link>
+                <Link href="/community" className="hover:text-slate-900 dark:hover:text-white transition-colors">Community</Link>
+                <Link href="/pricing" className="hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</Link>
             </div>
 
             <div className="flex items-center gap-4">
