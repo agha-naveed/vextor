@@ -105,7 +105,7 @@ export default function AboutDeveloper() {
                         </div>
                         <h2 className="text-6xl md:text-8xl font-bold text-slate-900 dark:text-white tracking-tighter leading-[0.9] transition-colors">
                             Coding <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 italic font-serif pr-4">
+                            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 italic font-serif pr-4">
                                 Alone.
                             </span>
                         </h2>
