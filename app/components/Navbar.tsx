@@ -7,10 +7,10 @@ import Link from "next/link";
 export default function Navbar() {
     return (
         <nav className="flex items-center justify-between px-6 py-4 bg-main max-w-screen-2xl mx-auto border-b dark:border-white/5 border-black/5 w-full">
-            <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-                <Image src={logo} className="w-8" alt="Vextor Logo" />
+            <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
+                <Image src={logo} className="w-7" alt="Vextor Logo" />
                 VEXTOR AI
-            </div>
+            </Link>
 
             <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
                 <Link href="/features" className="hover:text-slate-900 dark:hover:text-white transition-colors">Features</Link>

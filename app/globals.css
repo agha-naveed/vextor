@@ -12,6 +12,7 @@
 
 * {
   font-family: var(--font-openSans);
+  scroll-behavior: smooth;
 }
 
 body {

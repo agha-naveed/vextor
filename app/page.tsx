@@ -31,6 +31,8 @@ export default function Page() {
   }, []);
 
   useGSAP(() => {
+    if (!loaderFinished) return;
+
     heroTl.current = gsap.timeline({ paused: true });
 
     heroTl.current
@@ -38,32 +40,52 @@ export default function Page() {
       .from(".gsap-hero-btn", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, "-=0.3")
       .from(".gsap-ide", { opacity: 0, y: 40, duration: 1, ease: "power3.out" }, "-=0.2");
 
-    gsap.from(".gsap-feature-card", {
-      scrollTrigger: {
-        trigger: ".gsap-features-section",
-        start: "top 80%",
+    // 🚀 FIX 1: Change to fromTo so it forces opacity to become 1
+    gsap.fromTo(".gsap-feature-card",
+      {
+        opacity: 0,
+        y: 40
       },
-      opacity: 0,
-      y: 30,
-      duration: 0.6,
-      stagger: 0.15,
-      ease: "power2.out",
-    });
+      {
+        scrollTrigger: {
+          trigger: ".gsap-features-section",
+          start: "top 80%",
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power2.out",
+      }
+    );
 
     const fadeUpSections = gsap.utils.toArray(".gsap-fade-up", container.current) as HTMLElement[];
     fadeUpSections.forEach((section) => {
-      gsap.from(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: "top 85%",
+      // 🚀 Apply fromTo here as well to protect your other sections
+      gsap.fromTo(section,
+        {
+          opacity: 0,
+          y: 40
         },
-        opacity: 0,
-        y: 40,
-        duration: 0.8,
-        ease: "power2.out",
-      });
+        {
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+          },
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+        }
+      );
     });
-  }, { scope: container });
+
+    // 🚀 FIX 2: Recalculate scroll positions after the preloader removes itself
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
+  }, { scope: container, dependencies: [loaderFinished] });
 
   const handleTypingComplete = () => {
     if (heroTl.current) {
