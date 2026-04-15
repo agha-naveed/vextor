@@ -31,7 +31,8 @@ export default function Page() {
   }, []);
 
   useGSAP(() => {
-    if (!loaderFinished) return;
+    // 🚀 FIX 1: Removed the early return! 
+    // GSAP must run immediately on mount so it can set opacity: 0 before the user sees anything.
 
     heroTl.current = gsap.timeline({ paused: true });
 
@@ -40,7 +41,6 @@ export default function Page() {
       .from(".gsap-hero-btn", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, "-=0.3")
       .from(".gsap-ide", { opacity: 0, y: 40, duration: 1, ease: "power3.out" }, "-=0.2");
 
-    // 🚀 FIX 1: Change to fromTo so it forces opacity to become 1
     gsap.fromTo(".gsap-feature-card",
       {
         opacity: 0,
@@ -61,7 +61,6 @@ export default function Page() {
 
     const fadeUpSections = gsap.utils.toArray(".gsap-fade-up", container.current) as HTMLElement[];
     fadeUpSections.forEach((section) => {
-      // 🚀 Apply fromTo here as well to protect your other sections
       gsap.fromTo(section,
         {
           opacity: 0,
@@ -80,12 +79,9 @@ export default function Page() {
       );
     });
 
-    // 🚀 FIX 2: Recalculate scroll positions after the preloader removes itself
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 100);
-
-  }, { scope: container, dependencies: [loaderFinished] });
+  // 🚀 FIX 2: Removed `dependencies: [loaderFinished]`.
+  // This prevents GSAP from cleaning up and restarting when the loader finishes, which was causing the flash!
+  }, { scope: container });
 
   const handleTypingComplete = () => {
     if (heroTl.current) {
@@ -99,6 +95,12 @@ export default function Page() {
   const handleLoaderComplete = () => {
     sessionStorage.setItem("vextor_visited", "true");
     setLoaderFinished(true);
+    
+    // 🚀 FIX 3: Refresh ScrollTrigger right after the Preloader unmounts
+    // so it knows the new layout height.
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
   };
 
   return (
