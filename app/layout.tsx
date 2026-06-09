@@ -16,7 +16,7 @@ const roboto = Roboto_Condensed({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vextor AI | The Native Polyglot IDE",
+    default: "Vextor AI | An AI-Powered IDE",
     template: "%s | Vextor AI",
   },
   description: "Code without fear. Understand without limits. Vextor AI is a native polyglot IDE engineered with Rust and Go, featuring a crash-proof Natural Language Terminal and offline-first AI inference.",

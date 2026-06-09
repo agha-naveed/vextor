@@ -16,6 +16,7 @@ export default function Navbar() {
                 <Link href="/features" className="hover:text-slate-900 dark:hover:text-white transition-colors">Features</Link>
                 <Link href="/docs" className="hover:text-slate-900 dark:hover:text-white transition-colors">Docs</Link>
                 <Link href="/community" className="hover:text-slate-900 dark:hover:text-white transition-colors">Community</Link>
+                <Link href="/login" className="hover:text-slate-900 dark:hover:text-white transition-colors">Login</Link>
                 <Link href="/pricing" className="hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</Link>
             </div>
 
