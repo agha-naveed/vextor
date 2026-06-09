@@ -3,6 +3,7 @@ import { Open_Sans, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/theme-provider";
 import Navbar from "./components/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const openSans = Open_Sans({
   variable: "--font-openSans",
@@ -76,15 +77,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${openSans.variable} ${roboto.variable} antialiased w-full bg-main`}
-      >
-        <Providers>
-          <Navbar />
-          {children}
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${openSans.variable} ${roboto.variable} antialiased w-full bg-main`}
+        >
+          <Providers>
+            <Navbar />
+            {children}
+          </Providers>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
