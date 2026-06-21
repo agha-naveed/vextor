@@ -7,7 +7,7 @@ const handleOpenApp = () => {
     if (userId) {
       // Safely encode the name so spaces don't break the URL
       const safeName = encodeURIComponent(firstName);
-      window.location.href = `vextor://auth?userId=${userId}&name=${safeName}`;
+      window.location.assign(`vextor://auth?userId=${userId}&name=${safeName}`);
     }
   };
   
@@ -17,7 +17,7 @@ const handleOpenApp = () => {
     if (userId) {
       handleOpenApp();
       // Optional: still try to close the tab automatically
-      setTimeout(() => window.close(), 3000);
+      setTimeout(() => window.close(), 2000);
     }
   }, [userId]);
 
