@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   return (
     <div className={`flex justify-center my-[10vh] ${isReady ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"} duration-600 transition-all`}>
-        <SignIn forceRedirectUrl="/auth-success" /> 
+        <SignIn forceRedirectUrl="/auth-success" fallbackRedirectUrl="/auth-success" /> 
     </div>
   );
 }

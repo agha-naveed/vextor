@@ -3,57 +3,30 @@ import { useEffect } from 'react';
 
 export default function RedirectHandler({ userId, firstName }: { userId: string | null, firstName: string }) {
   
-const handleOpenApp = () => {
-    if (userId) {
-      // Safely encode the name so spaces don't break the URL
-      const safeName = encodeURIComponent(firstName);
-      window.location.assign(`vextor://auth?userId=${userId}&name=${safeName}`);
-    }
-  };
-  
-
-  // Keep the automatic attempt on page load
   useEffect(() => {
     if (userId) {
-      handleOpenApp();
-      // Optional: still try to close the tab automatically
-      setTimeout(() => window.close(), 2000);
+      const safeName = encodeURIComponent(firstName);
+      
+      // 1. Force the auto-redirect immediately
+      window.location.href = `vextor://auth?userId=${userId}&name=${safeName}`;
+      
+      // 2. Wait 3 seconds to ensure Electron catches the data before closing!
+      setTimeout(() => {
+        window.close();
+      }, 3000);
     }
-  }, [userId]);
+  }, [userId, firstName]);
 
   return (
     <div style={{ textAlign: 'center', marginTop: '10vh', fontFamily: 'sans-serif' }}>
-      <h2>Login Successful!</h2>
-      <p style={{ color: '#555', marginBottom: '30px' }}>
-        You are securely authenticated.
-      </p>
-
-      {/* 🚀 The explicit manual button */}
-      <button 
-        onClick={handleOpenApp}
-        style={{
-          padding: '12px 24px',
-          backgroundColor: '#3184FF',
-          color: '#ffffff',
-          border: 'none',
-          borderRadius: '6px',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          transition: 'background-color 0.2s'
-        }}
-        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#266edb'}
-        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#3184FF'}
-      >
-        Open Vextor IDE
-      </button>
-
-      <p style={{ marginTop: '20px' }}>
-        <small style={{ color: '#888' }}>
-          If the app does not open automatically, click the button above.<br/>
-          You can safely close this tab afterward.
-        </small>
+      <div style={{ display: 'inline-block', padding: '20px', backgroundColor: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
+        <h2 style={{ color: '#166534', margin: '0 0 10px 0' }}>Authentication Successful!</h2>
+        <p style={{ color: '#15803d', margin: 0, fontWeight: 'bold' }}>
+          Returning you to Vextor IDE automatically...
+        </p>
+      </div>
+      <p style={{ marginTop: '30px', color: '#888', fontSize: '14px' }}>
+        You can safely close this browser tab.
       </p>
     </div>
   );
