@@ -10,7 +10,7 @@ export async function POST(req:Request) {
     if (provider === 'groq') {
       url = 'https://api.groq.com/openai/v1/chat/completions';
       // VERCEL CAN SECURELY READ THESE ENV VARIABLES! 🚀
-      apiKey = process.env.GROQ_API_KEY || process.env.GROQ_API_KEY2;
+      apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3 ?? '';
       body = {
         model: model || 'llama-3.3-70b-versatile',
         temperature: 0.3,
@@ -20,7 +20,19 @@ export async function POST(req:Request) {
           { role: 'user', content: userPrompt }
         ]
       };
-    } else if (provider === 'cerebras') {
+    } else if (provider === 'openrouter') {
+      url = 'https://openrouter.ai/api/v1/chat/completions';
+      apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3 ?? '';
+      body = {
+        model: model || 'openai/gpt-oss-120b',
+        temperature: 0.3,
+        messages: [
+          { role: 'system', content: systemInstruction },
+          { role: 'user', content: userPrompt }
+        ]
+      };
+    }
+    else if (provider === 'cerebras') {
       url = 'https://api.cerebras.ai/v1/chat/completions';
       apiKey = process.env.CEREBRAS_API_KEY;
       body = {
@@ -31,7 +43,8 @@ export async function POST(req:Request) {
           { role: 'user', content: userPrompt }
         ]
       };
-    } else {
+    }
+    else {
       return NextResponse.json({ error: `Unsupported provider: ${provider}` }, { status: 400 });
     }
 
