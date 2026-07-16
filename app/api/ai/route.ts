@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req:Request) {
   try {
-    const { provider, model, systemInstruction, userPrompt } = await req.json();
+    const { provider, model, temperature, tokens, systemInstruction, userPrompt } = await req.json();
     let url, apiKey, body;
 
     // 1. Configure based on provider
@@ -13,8 +13,8 @@ export async function POST(req:Request) {
       apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3 ?? '';
       body = {
         model: model || 'llama-3.3-70b-versatile',
-        temperature: 0.3,
-        max_tokens: 6000,
+        temperature: temperature || 0.3,
+        max_tokens: tokens || 6000,
         messages: [
           { role: 'system', content: systemInstruction },
           { role: 'user', content: userPrompt }
@@ -25,7 +25,7 @@ export async function POST(req:Request) {
       apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3 ?? '';
       body = {
         model: model || 'openai/gpt-oss-120b',
-        temperature: 0.3,
+        temperature: temperature || 0.3,
         messages: [
           { role: 'system', content: systemInstruction },
           { role: 'user', content: userPrompt }
@@ -37,7 +37,7 @@ export async function POST(req:Request) {
       apiKey = process.env.CEREBRAS_API_KEY;
       body = {
         model: 'gpt-oss-120b',
-        temperature: 0.7,
+        temperature: temperature || 0.7,
         messages: [
           { role: 'system', content: systemInstruction },
           { role: 'user', content: userPrompt }
@@ -54,6 +54,8 @@ export async function POST(req:Request) {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'HTTP-Referer': 'http://localhost:5173',
+        'X-Title': 'Vextor AI IDE'
       },
       body: JSON.stringify(body)
     });
