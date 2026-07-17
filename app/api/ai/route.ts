@@ -1,7 +1,10 @@
-// VERCEL WEBSITE: app/api/ai/route.js
+// VERCEL WEBSITE: app/api/ai/route.ts
 import { NextResponse } from 'next/server';
 
-export async function POST(req:Request) {
+// 🚀 FIX 1: Override Vercel's strict 10-second timeout
+export const maxDuration = 60; 
+
+export async function POST(req: Request) {
   try {
     const { provider, model, temperature, tokens, systemInstruction, userPrompt } = await req.json();
     let url, apiKey, body;
@@ -9,7 +12,6 @@ export async function POST(req:Request) {
     // 1. Configure based on provider
     if (provider === 'groq') {
       url = 'https://api.groq.com/openai/v1/chat/completions';
-      // VERCEL CAN SECURELY READ THESE ENV VARIABLES! 🚀
       apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3 ?? '';
       body = {
         model: model || 'llama-3.3-70b-versatile',
@@ -36,7 +38,7 @@ export async function POST(req:Request) {
       url = 'https://api.cerebras.ai/v1/chat/completions';
       apiKey = process.env.CEREBRAS_API_KEY;
       body = {
-        model: 'gpt-oss-120b',
+        model: 'gpt-oss-120b', 
         temperature: temperature || 0.7,
         messages: [
           { role: 'system', content: systemInstruction },
@@ -60,8 +62,11 @@ export async function POST(req:Request) {
       body: JSON.stringify(body)
     });
 
+    // 🚀 FIX 2: Catch the EXACT error string from Groq/OpenRouter
     if (!response.ok) {
-      throw new Error(`AI API Error: ${response.statusText}`);
+      const errorText = await response.text(); 
+      console.error(`[${provider.toUpperCase()}] Provider Error:`, errorText);
+      throw new Error(`AI Provider Error (${response.status}): ${errorText}`);
     }
 
     const data = await response.json();
@@ -76,8 +81,8 @@ export async function POST(req:Request) {
         },
     });
 
-  } catch (error:any) {
-    console.error("Vercel AI Error:", error);
+  } catch (error: any) {
+    console.error("🔥 Vercel AI Route Crash:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
