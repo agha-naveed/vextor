@@ -56,7 +56,6 @@ export async function POST(req: Request) {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost:5173',
         'X-Title': 'Vextor AI IDE'
       },
       body: JSON.stringify(body)
