@@ -106,12 +106,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }
-
-
-export async function GET() {
-
-    await connectDB()
-
-    const a = await Extension.find()
-    return NextResponse.json(a)
-}

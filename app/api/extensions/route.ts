@@ -9,15 +9,14 @@ export async function GET() {
       await mongoose.connect(process.env.MONGODB_URI as string);
     }
 
-    // 2. Fetch all APPROVED extensions, sorted by newest
+    // 2. Fetch only approved extensions, newest first
     const extensions = await Extension.find({ status: "APPROVED" })
-      .select('name version developerId downloadUrl permissions createdAt')
-      .sort({ createdAt: -1 })
-      .lean();
+                                      .sort({ createdAt: -1 })
+                                      .select('-__v');
 
-    return NextResponse.json({ extensions }, { status: 200 });
-  } catch (error) {
+    return NextResponse.json(extensions, { status: 200 });
+  } catch (error: any) {
     console.error("Failed to fetch extensions:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }
