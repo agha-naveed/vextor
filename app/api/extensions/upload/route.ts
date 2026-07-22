@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import AdmZip from 'adm-zip';
-import { scanExtensionCode } from '@/utils/securityScanner'; // Adjust path if needed
+import { scanExtensionCode } from '@/utils/securityScanner';
+import { Extension } from '@/models/Extension';
+import mongoose from 'mongoose';
+import { v2 as cloudinary } from 'cloudinary';
+import { connectDB } from '@/utils/connectDB';
 
-// Interface for our expected manifest structure
-interface VextorManifest {
-  name: string;
-  version: string;
-  permissions?: string[];
-  [key: string]: any;
-}
+// 1. Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Extract the file from the FormData
     const formData = await req.formData();
     const file = formData.get('extension') as File | null;
 
@@ -20,24 +22,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No extension file provided." }, { status: 400 });
     }
 
-    // 2. Convert the uploaded file to a Node.js Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 3. Load the zip archive into memory (no disk writing required)
     const zip = new AdmZip(buffer);
     const zipEntries = zip.getEntries();
 
-    // 4. Locate and parse the vextor-manifest.json
     const manifestEntry = zipEntries.find(entry => entry.entryName === 'vextor-manifest.json' || entry.entryName === 'extension/vextor-manifest.json');
     
     if (!manifestEntry) {
-      return NextResponse.json({ 
-        error: "Invalid Package: Missing vextor-manifest.json at the root." 
-      }, { status: 400 });
+      return NextResponse.json({ error: "Missing vextor-manifest.json" }, { status: 400 });
     }
 
-    let manifest: VextorManifest;
+    let manifest: any;
     try {
       manifest = JSON.parse(manifestEntry.getData().toString('utf8'));
     } catch (err) {
@@ -47,51 +44,74 @@ export async function POST(req: NextRequest) {
     const permissions: string[] = manifest.permissions || [];
     const allViolations: { file: string; issues: string[] }[] = [];
 
-    // 5. Scan every JavaScript file inside the extension package
+    // 2. Run AST Security Scan
     for (const entry of zipEntries) {
-      // Only scan .js files (ignore images, json, md, etc.)
       if (entry.entryName.endsWith('.js') && !entry.isDirectory) {
         const jsCode = entry.getData().toString('utf8');
-        
-        // Run our AST scanner
         const fileViolations = scanExtensionCode(jsCode, permissions);
-        
         if (fileViolations.length > 0) {
-          allViolations.push({
-            file: entry.entryName,
-            issues: fileViolations
-          });
+          allViolations.push({ file: entry.entryName, issues: fileViolations });
         }
       }
     }
 
-    // 6. The Verdict: Reject if any security violations were found
     if (allViolations.length > 0) {
       return NextResponse.json({
         status: "REJECTED",
-        message: "Security audit failed. Malicious or unauthorized code detected.",
+        message: "Security audit failed.",
         violations: allViolations
       }, { status: 403 });
     }
 
-    // 7. Success! Save to Database and Cloud Storage
-    // TODO: Insert into PostgreSQL/MongoDB here
-    // TODO: Upload `buffer` to Cloudinary/S3 here
+    // 3. Upload to Cloudinary
+    const uploadPromise = new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { resource_type: 'raw', folder: 'vextor_extensions', format: 'zip' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    });
+
+    const cloudRes: any = await uploadPromise;
+
+    // 4. Connect to MongoDB Atlas and Save
+    if (!mongoose.connection.readyState) {
+    //   await mongoose.connect(process.env.MONGODB_URI as string);
+        await connectDB()
+
+    }
+
+    await Extension.create({
+      name: manifest.name,
+      displayName: manifest.displayName || manifest.name,
+      description: manifest.description || "No description provided.",
+      version: manifest.version,
+      developerId: "replace_with_actual_user_id", 
+      downloadUrl: cloudRes.secure_url,
+      permissions: permissions,
+      status: "APPROVED" 
+    });
 
     return NextResponse.json({
       status: "APPROVED",
-      message: "Extension passed security audit and is ready for publishing.",
-      manifest: {
-        name: manifest.name,
-        version: manifest.version,
-        permissions: permissions
-      }
+      message: "Extension published successfully.",
+      manifest: { name: manifest.name, version: manifest.version, permissions }
     }, { status: 200 });
 
   } catch (error: any) {
-    console.error("Upload processing failed:", error);
-    return NextResponse.json({ 
-      error: "Internal server error during upload processing." 
-    }, { status: 500 });
+    console.error("Upload failed:", error);
+    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
+}
+
+
+export async function GET() {
+
+    await connectDB()
+
+    const a = await Extension.find()
+    return NextResponse.json(a)
 }
