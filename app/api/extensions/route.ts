@@ -1,22 +1,25 @@
 import { NextResponse } from 'next/server';
-import mongoose from 'mongoose';
-import { Extension } from '@/models/Extension';
-import { connectDB } from '@/utils/connectDB';
+import { neon } from '@neondatabase/serverless';
 
 export async function GET() {
   try {
-    await connectDB()
+    // 1. Connect to Neon
+    const sql = neon(process.env.DATABASE_URL as string);
 
-    // 2. Fetch only approved extensions, newest first
-    const extensions = await Extension.find({ status: "APPROVED" })
-                                      .sort({ createdAt: -1 })
-                                      .select('-__v');
+    // 2. Write raw SQL
+    const extensions = await sql`
+      SELECT * FROM extensions 
+      WHERE status = 'APPROVED' 
+      ORDER BY created_at DESC
+    `;
 
-    return NextResponse.json(extensions, { status: 200, headers: {
-    'Access-Control-Allow-Origin': '*', // Allows your Electron app to read the data
-    'Access-Control-Allow-Methods': 'GET',
-    'Content-Type': 'application/json'
-  } });
+    return NextResponse.json(extensions, { 
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+      }
+    });
   } catch (error: any) {
     console.error("Failed to fetch extensions:", error);
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });

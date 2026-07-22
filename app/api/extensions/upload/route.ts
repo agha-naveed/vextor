@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import AdmZip from 'adm-zip';
 import { scanExtensionCode } from '@/utils/securityScanner';
-import { Extension } from '@/models/Extension';
-import mongoose from 'mongoose';
 import { v2 as cloudinary } from 'cloudinary';
-import { connectDB } from '@/utils/connectDB';
+import { neon } from '@neondatabase/serverless';
 
 // 1. Configure Cloudinary
 cloudinary.config({
@@ -77,23 +75,21 @@ export async function POST(req: NextRequest) {
 
     const cloudRes: any = await uploadPromise;
 
-    // 4. Connect to MongoDB Atlas and Save
-    if (!mongoose.connection.readyState) {
-    //   await mongoose.connect(process.env.MONGODB_URI as string);
-        await connectDB()
+    const sql = neon(process.env.DATABASE_URL as string);
 
-    }
-
-    await Extension.create({
-      name: manifest.name,
-      displayName: manifest.displayName || manifest.name,
-      description: manifest.description || "No description provided.",
-      version: manifest.version,
-      developerId: "replace_with_actual_user_id", 
-      downloadUrl: cloudRes.secure_url,
-      permissions: permissions,
-      status: "APPROVED" 
-    });
+    await sql`
+      INSERT INTO extensions (name, display_name, description, version, developer_id, download_url, permissions, status)
+      VALUES (
+        ${manifest.name}, 
+        ${manifest.displayName || manifest.name}, 
+        ${manifest.description || 'No description provided.'}, 
+        ${manifest.version}, 
+        'replace_with_actual_user_id', 
+        ${cloudRes.secure_url}, 
+        ${permissions}, 
+        'APPROVED'
+      )
+    `;
 
     return NextResponse.json({
       status: "APPROVED",
