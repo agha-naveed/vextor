@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import AdmZip from 'adm-zip';
-import { scanExtensionCode } from '@/utils/securityScanner';
+import { scanExtensionFiles, ScanSummary } from '@/utils/securityScanner';
 import { v2 as cloudinary } from 'cloudinary';
 import { neon } from '@neondatabase/serverless';
 
@@ -10,6 +10,40 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// ============================================================================
+// NOTIFY THE UPLOADER
+// This is intentionally a small, swappable function. Right now it logs and
+// (best-effort) writes a row so there's a record of every scan. Wire in real
+// email (Resend/SendGrid/etc.) here once you have a way to know the
+// uploader's address — see the README note about the developer_id gap.
+// ============================================================================
+async function notifyUploader(sql: ReturnType<typeof neon>, opts: {
+  developerId: string;
+  extensionName: string;
+  summary: ScanSummary;
+}) {
+  const { developerId, extensionName, summary } = opts;
+
+  console.log(
+    `📣 Notify uploader (${developerId}) — "${extensionName}": ` +
+    `${summary.passed ? 'PASSED' : 'REJECTED'} ` +
+    `(${summary.criticalCount} critical, ${summary.warningCount} warning)`
+  );
+
+  // Best-effort persistence so uploaders/admins can see scan history even
+  // before a real notification channel (email, in-app inbox, etc.) exists.
+  // Wrapped in try/catch so a missing table doesn't break the upload flow —
+  // see the README for the CREATE TABLE statement.
+  try {
+    await sql`
+      INSERT INTO extension_scan_reports (developer_id, extension_name, passed, critical_count, warning_count, report)
+      VALUES (${developerId}, ${extensionName}, ${summary.passed}, ${summary.criticalCount}, ${summary.warningCount}, ${JSON.stringify(summary.results)})
+    `;
+  } catch (err) {
+    console.error('Could not persist scan report (table may not exist yet):', err);
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,7 +61,7 @@ export async function POST(req: NextRequest) {
     const zipEntries = zip.getEntries();
 
     const manifestEntry = zipEntries.find(entry => entry.entryName === 'vextor-manifest.json' || entry.entryName === 'extension/vextor-manifest.json');
-    
+
     if (!manifestEntry) {
       return NextResponse.json({ error: "Missing vextor-manifest.json" }, { status: 400 });
     }
@@ -40,24 +74,31 @@ export async function POST(req: NextRequest) {
     }
 
     const permissions: string[] = manifest.permissions || [];
-    const allViolations: { file: string; issues: string[] }[] = [];
 
-    // 2. Run AST Security Scan
-    for (const entry of zipEntries) {
-      if (entry.entryName.endsWith('.js') && !entry.isDirectory) {
-        const jsCode = entry.getData().toString('utf8');
-        const fileViolations = scanExtensionCode(jsCode, permissions);
-        if (fileViolations.length > 0) {
-          allViolations.push({ file: entry.entryName, issues: fileViolations });
-        }
-      }
-    }
+    // 2. Run the AST security scan across every JS-like file in the archive
+    //    (not just .js — .mjs/.cjs extensions were previously a free pass)
+    const codeFiles = zipEntries
+      .filter(entry => !entry.isDirectory && /\.(js|mjs|cjs)$/i.test(entry.entryName))
+      .map(entry => ({ name: entry.entryName, code: entry.getData().toString('utf8') }));
 
-    if (allViolations.length > 0) {
+    const summary = scanExtensionFiles(codeFiles, permissions);
+
+    const sql = neon(process.env.DATABASE_URL as string) as any;
+
+    // 🚨 NOTE: developer_id is still a placeholder — see README. Notification
+    // is keyed on it, so until real auth is wired in, notifications aren't
+    // actually reaching a real developer yet.
+    const developerId = 'replace_with_actual_user_id';
+
+    await notifyUploader(sql, { developerId, extensionName: manifest.name, summary });
+
+    if (!summary.passed) {
       return NextResponse.json({
         status: "REJECTED",
-        message: "Security audit failed.",
-        violations: allViolations
+        message: "Security audit failed. Fix the critical issues below and re-upload.",
+        criticalCount: summary.criticalCount,
+        warningCount: summary.warningCount,
+        violations: summary.results,
       }, { status: 403 });
     }
 
@@ -75,8 +116,6 @@ export async function POST(req: NextRequest) {
 
     const cloudRes: any = await uploadPromise;
 
-    const sql = neon(process.env.DATABASE_URL as string);
-
     await sql`
       INSERT INTO extensions (name, display_name, description, version, developer_id, download_url, permissions, status)
       VALUES (
@@ -84,7 +123,7 @@ export async function POST(req: NextRequest) {
         ${manifest.displayName || manifest.name}, 
         ${manifest.description || 'No description provided.'}, 
         ${manifest.version}, 
-        'replace_with_actual_user_id', 
+        ${developerId}, 
         ${cloudRes.secure_url}, 
         ${permissions}, 
         'APPROVED'
@@ -93,7 +132,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       status: "APPROVED",
-      message: "Extension published successfully.",
+      message: summary.warningCount > 0
+        ? `Extension published successfully. ${summary.warningCount} warning(s) were noted — review them below.`
+        : "Extension published successfully.",
+      warnings: summary.warningCount > 0 ? summary.results : undefined,
       manifest: { name: manifest.name, version: manifest.version, permissions }
     }, { status: 200 });
 
