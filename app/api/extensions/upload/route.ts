@@ -98,7 +98,13 @@ export async function POST(req: NextRequest) {
         message: "Security audit failed. Fix the critical issues below and re-upload.",
         criticalCount: summary.criticalCount,
         warningCount: summary.warningCount,
-        violations: summary.results,
+        // Back-compat shape the current ExtensionUploadForm expects: file + flat string[] of issues.
+        violations: summary.results.map(r => ({
+          file: r.file,
+          issues: r.violations.map(v => `[${v.severity.toUpperCase()}] ${v.message}${v.line ? ` (line ${v.line})` : ''}`),
+        })),
+        // Full structured report, for once the form is updated to use it.
+        violationsDetailed: summary.results,
       }, { status: 403 });
     }
 

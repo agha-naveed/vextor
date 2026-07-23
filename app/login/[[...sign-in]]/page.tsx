@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { PiEye } from "react-icons/pi";
@@ -14,13 +14,46 @@ type FieldErrors = {
 };
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DEFAULT_REDIRECT = "/auth-success";
+
+// 🔒 redirect_url comes from the query string, i.e. it's attacker-controllable.
+// Only ever redirect to:
+//   - a same-site relative path ("/extension-marketplace") — never "//evil.com"
+//     or "https://evil.com", which browsers/routers can treat as external
+//   - the app's own custom protocol ("vextor://auth...") for the IDE deep-link
+// Anything else silently falls back to the default. This is what stops
+// someone from crafting a login link that sends a user's session somewhere
+// attacker-controlled after they authenticate.
+function getSafeRedirectUrl(raw: string | null): string {
+  if (!raw) return DEFAULT_REDIRECT;
+  if (raw.startsWith("vextor://")) return raw;
+  if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
+  return DEFAULT_REDIRECT;
+}
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { isLoaded: isSignInLoaded, signIn, setActive: setActiveSignIn } = useSignIn();
   const { isLoaded: isSignUpLoaded, signUp, setActive: setActiveSignUp } = useSignUp();
+
+  // Where to send the user once they're authenticated. Falls back to
+  // /auth-success (the IDE deep-link bridge) if nothing valid was passed —
+  // e.g. "/login?redirect_url=/extension-marketplace" for the marketplace flow.
+  const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url"));
+
+  // vextor:// isn't a route the Next.js router understands — it's the
+  // desktop app's own protocol, so it has to be a full page navigation
+  // rather than router.push().
+  const completeAuthRedirect = () => {
+    if (redirectUrl.startsWith("vextor://")) {
+      window.location.href = redirectUrl;
+    } else {
+      router.push(redirectUrl);
+    }
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -152,7 +185,7 @@ export default function LoginPage() {
           session: result.createdSessionId,
         });
 
-        router.push("/auth-success");
+        completeAuthRedirect();
       } else {
         // Handles cases like 2FA / additional Clerk factors being required
         setError("Additional verification is required to sign in.");
@@ -239,7 +272,7 @@ export default function LoginPage() {
           session: result.createdSessionId,
         });
 
-        router.push("/auth-success");
+        completeAuthRedirect();
       } else {
         setError("Verification could not be completed. Please try again.");
       }
@@ -353,7 +386,7 @@ export default function LoginPage() {
                       signIn.authenticateWithRedirect({
                         strategy: "oauth_google",
                         redirectUrl: "/sso-callback",
-                        redirectUrlComplete: "/auth-success",
+                        redirectUrlComplete: redirectUrl,
                       })
                     }
                     className="flex h-12 cursor-pointer w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 text-sm font-medium text-white transition hover:bg-white/10"
