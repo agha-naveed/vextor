@@ -3,6 +3,7 @@ import AdmZip from 'adm-zip';
 import { scanExtensionFiles, ScanSummary } from '@/utils/securityScanner';
 import { v2 as cloudinary } from 'cloudinary';
 import { neon } from '@neondatabase/serverless';
+import { ensureUserRecord } from '@/lib/ensureUser';
 
 // 1. Configure Cloudinary
 cloudinary.config({
@@ -47,6 +48,17 @@ async function notifyUploader(sql: ReturnType<typeof neon>, opts: {
 
 export async function POST(req: NextRequest) {
   try {
+    const sql = neon(process.env.DATABASE_URL as string) as any;
+
+    // 🔒 Was: no auth check at all, and developer_id was a literal hardcoded
+    // string — meaning anyone could publish anonymously and every extension
+    // in the DB was attributed to the same fake user. Now the upload is
+    // actually tied to a real, signed-in Clerk account.
+    const developerId = await ensureUserRecord(sql);
+    if (!developerId) {
+      return NextResponse.json({ error: "You must be signed in to publish an extension." }, { status: 401 });
+    }
+
     const formData = await req.formData();
     const file = formData.get('extension') as File | null;
 
@@ -83,13 +95,7 @@ export async function POST(req: NextRequest) {
 
     const summary = scanExtensionFiles(codeFiles, permissions);
 
-    const sql = neon(process.env.DATABASE_URL as string) as any;
-
-    // 🚨 NOTE: developer_id is still a placeholder — see README. Notification
-    // is keyed on it, so until real auth is wired in, notifications aren't
-    // actually reaching a real developer yet.
-    const developerId = 'replace_with_actual_user_id';
-
+    // developerId was already resolved above from the real, signed-in Clerk session.
     await notifyUploader(sql, { developerId, extensionName: manifest.name, summary });
 
     if (!summary.passed) {
