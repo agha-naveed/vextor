@@ -362,7 +362,7 @@ function LoginContent() {
             </form>
 
             {/* 🔥 MOVED: Clerk Smart CAPTCHA mount point is now unconditionally rendered outside the form logic */}
-            <div id="clerk-captcha" />
+            {/* <div id="clerk-captcha" /> */}
           </div>
         </section>
       </div>
