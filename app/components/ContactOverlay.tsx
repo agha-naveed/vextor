@@ -75,12 +75,12 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
     return (
         <div
             ref={overlayRef}
-            className="fixed inset-0 z-10000 hidden items-center justify-center bg-slate-900/40 dark:bg-zinc-950/70 backdrop-blur-3xl opacity-0"
+            className="fixed inset-0 z-[10000] hidden items-center justify-center bg-neutral-900/40 dark:bg-black/70 backdrop-blur-3xl opacity-0"
         >
             <div className="absolute inset-0" onClick={onClose} />
 
             <div
-                className={`fixed top-10 left-1/2 -translate-x-1/2 z-99999 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${showToast
+                className={`fixed top-10 left-1/2 -translate-x-1/2 z-[99999] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${showToast
                     ? "opacity-100 translate-y-0 scale-100"
                     : "opacity-0 -translate-y-10 scale-95 pointer-events-none"
                     }`}
@@ -103,29 +103,29 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
 
             <div
                 ref={cardRef}
-                className="relative w-full max-w-5xl mx-6 bg-white dark:bg-[#090A0F] border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl dark:shadow-[0_0_100px_rgba(0,0,0,1)] grid grid-cols-1 md:grid-cols-12 transition-colors duration-500"
+                className="relative w-full max-w-5xl mx-6 bg-white dark:bg-[#090C15] border border-neutral-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl dark:shadow-[0_0_100px_rgba(0,0,0,1)] grid grid-cols-1 md:grid-cols-12 transition-colors duration-500"
             >
-                <div className="md:col-span-4 bg-slate-50 dark:bg-[#0D0E14] p-10 border-r border-slate-200 dark:border-white/5 flex flex-col justify-between relative overflow-hidden transition-colors duration-500">
-                    <div className="absolute -top-20 -left-20 w-40 h-40 bg-indigo-600/10 dark:bg-indigo-600/20 blur-[60px] rounded-full pointer-events-none" />
+                <div className="md:col-span-4 bg-neutral-50 dark:bg-white/[0.02] p-10 border-r border-neutral-200 dark:border-white/5 flex flex-col justify-between relative overflow-hidden transition-colors duration-500">
+                    <div className="absolute -top-20 -left-20 w-40 h-40 bg-primary/10 dark:bg-primary/20 blur-[60px] rounded-full pointer-events-none" />
 
                     <div className="relative z-10">
-                        <LuTerminal className="w-12 h-12 text-indigo-600 dark:text-indigo-500 mb-6" />
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tighter mb-2 transition-colors">System Access</h2>
-                        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em]">Direct Node // Syed Naveed Abbas</p>
+                        <LuTerminal className="w-12 h-12 text-primary mb-6" />
+                        <h2 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tighter mb-2 transition-colors">System Access</h2>
+                        <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-[0.3em]">Direct Node // Syed Naveed Abbas</p>
                     </div>
 
                     <div className="space-y-6 relative z-10">
                         <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-slate-200 dark:bg-white/5 transition-colors"><LuFingerprint className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /></div>
+                            <div className="p-2 rounded-lg bg-neutral-200 dark:bg-white/5 transition-colors"><LuFingerprint className="w-4 h-4 text-primary" /></div>
                             <div>
-                                <div className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Identity</div>
-                                <div className="text-xs text-slate-900 dark:text-white font-mono transition-colors">SOLO_ARCHITECT</div>
+                                <div className="text-[9px] text-neutral-500 uppercase font-bold tracking-widest">Identity</div>
+                                <div className="text-xs text-neutral-900 dark:text-white font-mono transition-colors">SOLO_ARCHITECT</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-slate-200 dark:bg-white/5 transition-colors"><TbActivity className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /></div>
+                            <div className="p-2 rounded-lg bg-neutral-200 dark:bg-white/5 transition-colors"><TbActivity className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /></div>
                             <div>
-                                <div className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Status</div>
+                                <div className="text-[9px] text-neutral-500 uppercase font-bold tracking-widest">Status</div>
                                 <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono transition-colors">ONLINE_READY</div>
                             </div>
                         </div>
@@ -135,7 +135,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 <div className="md:col-span-8 p-10 md:p-14 relative">
                     <button
                         onClick={onClose}
-                        className="absolute top-8 right-8 text-slate-400 hover:text-slate-900 dark:text-slate-600 dark:hover:text-white transition-colors"
+                        className="absolute top-8 right-8 text-neutral-400 hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-white transition-colors"
                     >
                         <IoCloseOutline className="w-6 h-6 cursor-pointer" />
                     </button>
@@ -143,48 +143,48 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                     <form className="space-y-8" onSubmit={sendData}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Payload.Name</label>
+                                <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">Payload.Name</label>
                                 <input
                                     required
                                     type="text"
                                     value={userData.name}
                                     onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                                     placeholder="ENTER_NAME"
-                                    className="w-full bg-transparent border-b border-slate-300 dark:border-white/10 py-3 text-slate-900 dark:text-white text-sm font-mono focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-800"
+                                    className="w-full bg-transparent border-b border-neutral-300 dark:border-white/10 py-3 text-neutral-900 dark:text-white text-sm font-mono focus:border-primary outline-none transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-700"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Payload.Return_Mail</label>
+                                <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">Payload.Return_Mail</label>
                                 <input
                                     required
                                     type="email"
                                     value={userData.email}
                                     placeholder="ENTER_EMAIL"
                                     onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                                    className="w-full bg-transparent border-b border-slate-300 dark:border-white/10 py-3 text-slate-900 dark:text-white text-sm font-mono focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-800"
+                                    className="w-full bg-transparent border-b border-neutral-300 dark:border-white/10 py-3 text-neutral-900 dark:text-white text-sm font-mono focus:border-primary outline-none transition-all placeholder:text-neutral-400 dark:placeholder:text-neutral-700"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Payload.Message</label>
+                            <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">Payload.Message</label>
                             <textarea
                                 required
                                 value={userData.message}
                                 placeholder="DESCRIBE_YOUR_VISION"
                                 rows={4}
                                 onChange={(e) => setUserData({ ...userData, message: e.target.value })}
-                                className="w-full bg-transparent border-b border-slate-300 dark:border-white/10 py-3 text-slate-900 dark:text-white text-sm font-mono focus:border-indigo-500 outline-none transition-all resize-none placeholder:text-slate-400 dark:placeholder:text-slate-800"
+                                className="w-full bg-transparent border-b border-neutral-300 dark:border-white/10 py-3 text-neutral-900 dark:text-white text-sm font-mono focus:border-primary outline-none transition-all resize-none placeholder:text-neutral-400 dark:placeholder:text-neutral-700"
                             />
                         </div>
 
                         <div className="flex items-center justify-between gap-8 pt-4">
-                            <div className="flex items-center gap-2 text-[9px] font-mono text-slate-500 dark:text-slate-600 uppercase tracking-widest">
-                                <GoShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-500" /> Secure Protocol 2.0.4
+                            <div className="flex items-center gap-2 text-[9px] font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">
+                                <GoShieldCheck className="w-4 h-4 text-primary" /> Secure Protocol 2.0.4
                             </div>
                             <button
                                 disabled={status === "sending"}
-                                className="group px-10 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-xl transition-all flex items-center gap-4 shadow-[0_0_30px_rgba(79,70,229,0.3)] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                                className="group px-10 py-4 bg-primary hover:opacity-90 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-xl transition-all flex items-center gap-4 shadow-[0_0_20px_var(--color-primary)] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                             >
                                 <span>{status === "sending" ? "TRANSMITTING..." : "Transmit"}</span>
                                 <LuSend className={`w-4 h-4 transition-transform ${status === "sending" ? "animate-pulse" : "group-hover:translate-x-1 group-hover:-translate-y-1"}`} />

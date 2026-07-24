@@ -142,10 +142,10 @@ export default function Community() {
                 <h2 className="text-xs font-black text-primary tracking-[0.4em] uppercase mb-4">
                     From the changelog of real teams
                 </h2>
-                <p className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tighter mb-6">
+                <p className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white tracking-tighter mb-6">
                     Engineers who switched and stayed.
                 </p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+                <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
                     Join the developers who have already made the switch to a frictionless workflow.
                 </p>
             </div>
@@ -176,24 +176,24 @@ export default function Community() {
                         {loopedTestimonials.map((user, i) => (
                             <div
                                 key={i}
-                                className="w-[300px] md:w-[400px] shrink-0 bg-slate-50 dark:bg-[#121729] p-8 rounded-3xl border border-slate-200 dark:border-white/5 transition-colors hover:border-primary/30 flex flex-col justify-between"
+                                className="w-[300px] md:w-[400px] shrink-0 bg-neutral-50 dark:bg-white/[0.02] p-8 rounded-3xl border border-neutral-200 dark:border-white/5 transition-colors hover:border-primary/30 flex flex-col justify-between"
                             >
-                                <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-8 pointer-events-none">
+                                <p className="text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed mb-8 pointer-events-none">
                                     "{user.quote}"
                                 </p>
 
-                                <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-white/5 pointer-events-none">
+                                <div className="flex items-center justify-between pt-6 border-t border-neutral-200 dark:border-white/5 pointer-events-none">
                                     <div className="flex items-center gap-3">
                                         {/* Avatar mapping logic extracts initials (e.g., RK) */}
                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${user.avatarColor}`}>
                                             {user.name.split(" ").map(n => n[0]).join("")}
                                         </div>
                                         <div>
-                                            <h4 className="text-slate-900 dark:text-white font-bold text-xs">{user.name}</h4>
-                                            <p className="text-slate-500 text-[10px] uppercase tracking-wider">{user.role}</p>
+                                            <h4 className="text-neutral-900 dark:text-white font-bold text-xs">{user.name}</h4>
+                                            <p className="text-neutral-500 text-[10px] uppercase tracking-wider">{user.role}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-slate-400">
+                                    <div className="flex items-center gap-2 text-neutral-400">
                                         <span className="text-xs font-mono">{user.handle}</span>
                                         <user.icon className="w-4 h-4" />
                                     </div>

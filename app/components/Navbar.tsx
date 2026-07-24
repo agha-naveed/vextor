@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Navbar() {
     return (
-        <nav className="flex items-center justify-between px-6 py-4 bg-main max-w-screen-2xl mx-auto border-b dark:border-white/5 border-black/5 w-full">
+        <nav className="flex items-center justify-between px-6 py-4 bg-main/70 max-w-screen-2xl mx-auto border-b dark:border-white/5 border-black/5 w-full backdrop-blur-sm z-200 sticky top-0">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
                 <Image src={logo} className="w-7" alt="Vextor Logo" />
                 VEXTOR AI

@@ -3,13 +3,12 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { FaDocker, FaJava, FaMarkdown, FaPython, FaRust } from "react-icons/fa";
+import { FaDocker, FaJava, FaMarkdown, FaPython, FaNodeJs, FaReact } from "react-icons/fa";
 import { VscJson } from "react-icons/vsc";
 import { FiGithub } from "react-icons/fi";
 import { IoLogoJavascript } from "react-icons/io";
 import { TbBrandCpp } from "react-icons/tb";
 import { DiRedis } from "react-icons/di";
-import { FaGolang } from "react-icons/fa6";
 import { IoCodeSlashSharp } from "react-icons/io5";
 
 const integrations = [
@@ -19,8 +18,8 @@ const integrations = [
     { icon: FaDocker, name: "Docker" },
     { icon: FaJava, name: "Java" },
     { icon: TbBrandCpp, name: "C++" },
-    { icon: FaRust, name: "Rust" },
-    { icon: FaGolang, name: "Go" },
+    { icon: FaNodeJs, name: "Node.js" },
+    { icon: FaReact, name: "React" },
     { icon: FiGithub, name: "GitHub" },
     { icon: IoCodeSlashSharp, name: "HTML" },
     { icon: DiRedis, name: "Redis" },
@@ -83,66 +82,61 @@ export default function IntegrationGrid() {
 
             {/* Header Section */}
             <div className="text-center mb-16 relative z-10">
-                <h2 className="text-xs font-black text-indigo-600 dark:text-indigo-500 tracking-[0.4em] uppercase mb-4">
-                    Native Environments
+                <h2 className="text-xs font-black text-primary tracking-[0.4em] uppercase mb-4">
+                    Language support
                 </h2>
-                <p className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tighter mb-6">
-                    Vextor supports these.
+                <p className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white tracking-tighter mb-6">
+                    Fluent in what your stack already speaks.
                 </p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-                    Vextor AI isn't confined to a single ecosystem. It natively understands and accelerates your workflow across the modern stack with zero configuration.
+                <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+                    Language servers, formatters, and linters are configured out of the box — install nothing to get started.
                 </p>
             </div>
 
             {/* Static Section Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-indigo-500/10 dark:bg-indigo-500/5 blur-[120px] -z-10 pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-primary/10 dark:bg-primary/5 blur-[120px] -z-10 pointer-events-none" />
 
-            {/* The Grid */}
+            {/* The Grid - Now using highly transparent white for dark mode */}
             <div
                 ref={gridRef}
-                className="relative grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 rounded-3xl border border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-[#0A0B10]/50 overflow-hidden shadow-xl shadow-slate-200/50 dark:shadow-none"
+                className="relative grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 rounded-3xl border border-neutral-200 dark:border-white/10 bg-neutral-50/50 dark:bg-white/[0.02] overflow-hidden shadow-xl shadow-neutral-200/50 dark:shadow-none"
             >
-                {/* The following flare */}
+                {/* Background moving flare */}
                 <div
                     ref={flareRef}
-                    className="absolute w-[300px] h-[300px] bg-indigo-500/20 dark:bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none z-0"
+                    className="absolute w-[300px] h-[300px] bg-primary/20 dark:bg-primary/10 blur-[80px] rounded-full pointer-events-none z-0"
                 />
 
                 {integrations.map((item, i) => (
                     <div
                         key={i}
-                        className="integration-card group relative aspect-square rounded-2xl bg-white dark:bg-[#11141d] border border-slate-200 dark:border-white/10 flex flex-col items-center justify-center overflow-hidden z-10 transition-colors duration-500 hover:bg-slate-50 dark:hover:bg-[#161b26]"
+                        className="integration-card group relative aspect-square rounded-2xl bg-white dark:bg-white/[0.04] backdrop-blur-xl border border-neutral-200 dark:border-white/5 flex flex-col items-center justify-center overflow-hidden z-10 transition-colors duration-500 hover:bg-neutral-50 dark:hover:bg-white/[0.08]"
                     >
                         {/* Hover Background Glow */}
                         <div
-                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-primary/15"
                             style={{
-                                background: `radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(99, 102, 241, 0.15), transparent 40%)`
+                                WebkitMaskImage: `radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), black, transparent 40%)`,
+                                maskImage: `radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), black, transparent 40%)`
                             }}
                         />
 
                         {/* Icon */}
-                        <div className="relative z-20 mb-3 transition-transform duration-500 group-hover:scale-110">
-                            <item.icon
-                                className="w-10 h-10 text-slate-400 dark:text-slate-600 transition-colors duration-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
-                                style={{ filter: `drop-shadow(0 0 10px rgba(99, 102, 241, 0.3))` }}
-                            />
+                        <div className="relative z-20 mb-3 transition-transform duration-500 group-hover:scale-110 drop-shadow-none group-hover:drop-shadow-[0_0_10px_var(--color-primary)]">
+                            <item.icon className="w-10 h-10 text-neutral-400 dark:text-white/60 transition-colors duration-500 group-hover:text-primary" />
                         </div>
 
                         {/* Label */}
-                        <span className="relative z-20 text-[10px] font-mono tracking-widest uppercase text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-500">
+                        <span className="relative z-20 text-[10px] font-mono tracking-widest uppercase text-neutral-500 dark:text-white/40 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors duration-500">
                             {item.name}
                         </span>
 
-                        {/* Hover Border Glow - Masked */}
+                        {/* Hover Border Glow */}
                         <div
-                            className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-transparent"
+                            className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-primary/80"
                             style={{
-                                background: `radial-gradient(120px circle at var(--mouse-x) var(--mouse-y), rgba(99, 102, 241, 0.8), transparent 80%)`,
-                                WebkitMask: `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
-                                WebkitMaskComposite: `destination-out`,
-                                maskComposite: `exclude`,
-                                padding: '1px'
+                                WebkitMaskImage: `radial-gradient(120px circle at var(--mouse-x) var(--mouse-y), black, transparent 80%)`,
+                                maskImage: `radial-gradient(120px circle at var(--mouse-x) var(--mouse-y), black, transparent 80%)`
                             }}
                         />
                     </div>

@@ -15,6 +15,7 @@ import Footer from "./components/Footer";
 import AboutDeveloper from "./components/AboutDeveloper";
 import ComparisonTable from "./components/ComparisonTable";
 import DownloadCTA from "./components/DownloadCTA";
+import Pricing from "./components/Pricing";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -119,6 +120,7 @@ export default function Page() {
       <ComparisonTable />
       <Community />
       <IntegrationGrid />
+      <Pricing />
       <AboutDeveloper />
       <DownloadCTA />
       <Footer />
