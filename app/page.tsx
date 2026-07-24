@@ -13,6 +13,9 @@ import Community from "./components/Community";
 import IntegrationGrid from "./components/IntegrationGrid";
 import Footer from "./components/Footer";
 import AboutDeveloper from "./components/AboutDeveloper";
+import StatsBar from "./components/StatsBar";
+import ComparisonTable from "./components/ComparisonTable";
+import DownloadCTA from "./components/DownloadCTA";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -114,9 +117,11 @@ export default function Page() {
 
       <IdeMockup />
       <FeaturesGrid />
+      <ComparisonTable />
       <Community />
       <IntegrationGrid />
       <AboutDeveloper />
+      <DownloadCTA />
       <Footer />
     </div>
   );

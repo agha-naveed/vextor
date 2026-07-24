@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     VscFiles, VscSourceControl, VscExtensions, VscHistory,
     VscTerminal, VscCommentDiscussion, VscSettingsGear,
@@ -6,7 +6,12 @@ import {
 } from 'react-icons/vsc';
 import { FiSearch } from 'react-icons/fi';
 import { IoSparklesSharp } from 'react-icons/io5';
-
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/all';
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 // Simulated Code Contexts
 const FILES = {
     'App.jsx': {
@@ -66,8 +71,9 @@ export default function IdeMockup() {
     const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
     const [activeModel, setActiveModel] = useState('Llama 3.3');
     const [terminalOutput, setTerminalOutput] = useState(false);
-
+    const containerRef = useRef<HTMLElement>(null);
     // Simulate Terminal output when opened
+
     useEffect(() => {
         if (isTerminalOpen) {
             setTerminalOutput(false);
@@ -76,8 +82,22 @@ export default function IdeMockup() {
         }
     }, [isTerminalOpen]);
 
+    useGSAP(() => {
+        gsap.to(".ide-window", {
+            scale: 1.08, // Scales the IDE up by 8% 
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 50%",  // Animation starts when top of container hits 80% of viewport
+                end: "top 15%", // Animation completes when center of container hits 40% of viewport
+                scrub: 0.5,          // Smoothly links the animation progress to the scrollbar
+                toggleActions: "play reverse play reverse"
+            }
+        });
+    }, { scope: containerRef });
+
     return (
-        <section className="gsap-ide relative max-w-[1200px] mx-auto px-4 mb-32 isolate">
+        <section ref={containerRef} className="gsap-ide relative max-w-[1200px] mx-auto px-4 mb-32 isolate">
             <style>{`
                 .ide-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
                 .ide-scrollbar::-webkit-scrollbar-track { background: transparent; }
@@ -89,7 +109,7 @@ export default function IdeMockup() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 blur-[100px] rounded-full pointer-events-none z-0" />
 
             {/* Main IDE Window */}
-            <div className="rounded-xl overflow-hidden bg-[#0A0D14] border border-white/10 shadow-2xl shadow-indigo-500/10 relative z-20 flex flex-col h-[750px] font-mono text-sm text-slate-300">
+            <div className="ide-window rounded-xl overflow-hidden bg-[#0A0D14] border border-white/10 shadow-2xl shadow-indigo-500/10 relative z-20 flex flex-col h-[750px] font-mono text-sm text-slate-300">
 
                 {/* Top Menu Bar - Windows Style */}
                 <div className="h-9 w-full bg-[#0A0D14] border-b border-white/5 flex items-center justify-between pl-4 select-none">

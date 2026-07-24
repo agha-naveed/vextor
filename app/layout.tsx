@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./components/theme-provider";
 import Navbar from "./components/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import AnimatedBackground from "./components/AnimatedBackground";
 
 const openSans = Open_Sans({
   variable: "--font-openSans",
@@ -84,6 +85,7 @@ export default function RootLayout({
         >
           <Providers>
             <Navbar />
+            <AnimatedBackground />
             {children}
           </Providers>
         </body>
