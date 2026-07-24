@@ -244,26 +244,24 @@ function LoginContent() {
   };
 
   return (
-    <main className={`relative min-h-screen overflow-hidden bg-[#0B0F17] transition-all duration-700 ease-out ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-      <div className="absolute left-20 top-24 h-40 w-40 animate-pulse rounded-full bg-blue-500/20 blur-[80px]" />
-      <div className="absolute bottom-32 right-32 h-52 w-52 animate-pulse rounded-full bg-violet-500/20 blur-[120px]" style={{ animationDuration: "5s" }} />
-      <div className="absolute left-1/2 top-1/2 h-32 w-32 animate-pulse rounded-full bg-cyan-400/20 blur-[90px]" style={{ animationDuration: "8s" }} />
+    <main className={`relative min-h-screen overflow-hidden bg-neutral-50 dark:bg-[#06070a] transition-all duration-700 ease-out flex items-center justify-center ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
       
-      <div className="absolute inset-0">
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-600/20 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-[450px] w-[450px] rounded-full bg-violet-600/20 blur-[140px]" />
-      </div>
+      {/* Neutral Ambient Glow Backgrounds */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[800px] max-h-[800px] bg-neutral-400/10 dark:bg-white/[0.02] blur-[100px] rounded-full pointer-events-none -z-10" />
 
-      <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)`, backgroundSize: "40px 40px" }} />
+      {/* Subtle Technical Grid */}
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none -z-10" style={{ backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`, backgroundSize: "40px 40px", color: "inherit" }} />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center justify-center py-20 px-8 lg:px-16">
-        <section className="mx-auto w-full max-w-md lg:mx-0">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-2xl shadow-[0_0_60px_rgba(59,130,246,0.15)]">
-            <h2 className="text-3xl font-bold text-white transition-all duration-300">
+      <div className="relative z-10 w-full px-4 sm:px-8 lg:px-16 py-12 flex justify-center">
+        <section className="w-full max-w-[420px]">
+          
+          <div className="rounded-3xl border border-neutral-200 dark:border-white/10 bg-white/80 dark:bg-[#06070a]/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl shadow-black/5 dark:shadow-none">
+            
+            <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white tracking-tight transition-all duration-300">
               {pendingVerification ? "Verify Your Email" : isSignup ? "Create Account" : "Welcome Back"}
             </h2>
 
-            <p className="mt-2 text-gray-400 transition-all duration-300">
+            <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 transition-all duration-300">
               {pendingVerification ? `We sent a 6-digit code to ${email}. Enter it below to finish creating your account.` : isSignup ? "Create your Vextor AI account." : "Sign in to continue building with Vextor AI."}
             </p>
 
@@ -273,7 +271,7 @@ function LoginContent() {
                   <button
                     type="button"
                     onClick={() => signIn && signIn.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: redirectUrl })}
-                    className="flex h-12 cursor-pointer w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 text-sm font-medium text-white transition hover:bg-white/10"
+                    className="flex h-12 cursor-pointer w-full items-center justify-center gap-3 rounded-xl border border-neutral-200 dark:border-white/10 bg-neutral-50 hover:bg-neutral-100 dark:bg-white/5 dark:hover:bg-white/10 text-sm font-medium text-neutral-900 dark:text-white transition-all duration-200"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 48 48">
                       <path fill="#FFC107" d="M43.6 20H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-4z" />
@@ -285,52 +283,52 @@ function LoginContent() {
                   </button>
 
                   <div className="flex items-center gap-4">
-                    <div className="h-px flex-1 bg-white/10" />
-                    <span className="text-xs uppercase tracking-widest text-gray-500">OR</span>
-                    <div className="h-px flex-1 bg-white/10" />
+                    <div className="h-px flex-1 bg-neutral-200 dark:bg-white/10" />
+                    <span className="text-xs uppercase tracking-widest text-neutral-400 font-mono">OR</span>
+                    <div className="h-px flex-1 bg-neutral-200 dark:bg-white/10" />
                   </div>
 
                   {isSignup && (
                     <div className="overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-top-2">
-                      <label className="mb-2 block text-sm text-gray-300">Full Name</label>
-                      <input value={name} onChange={(e) => { setName(e.target.value); clearFieldError("name"); }} placeholder="John Doe" className={`h-12 w-full rounded-xl border bg-white/5 px-4 text-white outline-none transition focus:ring-2 ${fieldErrors.name ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-white/10 focus:border-blue-500 focus:ring-blue-500/20"}`} />
-                      {fieldErrors.name && <p className="mt-1.5 text-xs text-red-400">{fieldErrors.name}</p>}
+                      <label className="mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Full Name</label>
+                      <input value={name} onChange={(e) => { setName(e.target.value); clearFieldError("name"); }} placeholder="John Doe" className={`h-12 w-full rounded-xl border bg-transparent px-4 text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none transition focus:ring-2 ${fieldErrors.name ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-neutral-200 dark:border-white/10 focus:border-neutral-900 dark:focus:border-white focus:ring-neutral-900/10 dark:focus:ring-white/10"}`} />
+                      {fieldErrors.name && <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{fieldErrors.name}</p>}
                     </div>
                   )}
 
                   <div>
-                    <label className="mb-2 block text-sm text-gray-300">Email</label>
-                    <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); clearFieldError("email"); }} placeholder="you@example.com" className={`h-12 w-full rounded-xl border bg-white/5 px-4 text-white outline-none placeholder:text-gray-500 transition focus:ring-2 ${fieldErrors.email ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-white/10 focus:border-blue-500 focus:ring-blue-500/20"}`} />
-                    {fieldErrors.email && <p className="mt-1.5 text-xs text-red-400">{fieldErrors.email}</p>}
+                    <label className="mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Email</label>
+                    <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); clearFieldError("email"); }} placeholder="you@example.com" className={`h-12 w-full rounded-xl border bg-transparent px-4 text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none transition focus:ring-2 ${fieldErrors.email ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-neutral-200 dark:border-white/10 focus:border-neutral-900 dark:focus:border-white focus:ring-neutral-900/10 dark:focus:ring-white/10"}`} />
+                    {fieldErrors.email && <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{fieldErrors.email}</p>}
                   </div>
 
                   <div>
                     <div className="mb-2 flex justify-between">
-                      <label className="text-sm text-gray-300">Password</label>
-                      {!isSignup && <button type="button" className="text-xs text-blue-400">Forgot?</button>}
+                      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Password</label>
+                      {!isSignup && <button type="button" className="text-xs text-neutral-900 dark:text-white font-medium hover:underline">Forgot?</button>}
                     </div>
                     <div className="relative">
-                      <input type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => { setPassword(e.target.value); clearFieldError("password"); }} className={`h-12 w-full rounded-xl border bg-white/5 px-4 pr-12 text-white outline-none placeholder:text-gray-500 transition focus:ring-2 ${fieldErrors.password ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-white/10 focus:border-blue-500 focus:ring-blue-500/20"}`} />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-white" title={showPassword ? "Hide Password" : "Show Password"}>{showPassword ? <RiEyeCloseLine /> : <PiEye />}</button>
+                      <input type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => { setPassword(e.target.value); clearFieldError("password"); }} className={`h-12 w-full rounded-xl border bg-transparent px-4 pr-12 text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none transition focus:ring-2 ${fieldErrors.password ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-neutral-200 dark:border-white/10 focus:border-neutral-900 dark:focus:border-white focus:ring-neutral-900/10 dark:focus:ring-white/10"}`} />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 cursor-pointer -translate-y-1/2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white" title={showPassword ? "Hide Password" : "Show Password"}>{showPassword ? <RiEyeCloseLine /> : <PiEye />}</button>
                     </div>
-                    {fieldErrors.password && <p className="mt-1.5 text-xs text-red-400">{fieldErrors.password}</p>}
-                    {isSignup && !fieldErrors.password && <p className="mt-1.5 text-xs text-gray-500">At least 8 characters, one uppercase letter and one number.</p>}
+                    {fieldErrors.password && <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{fieldErrors.password}</p>}
+                    {isSignup && !fieldErrors.password && <p className="mt-1.5 text-xs text-neutral-500">At least 8 characters, one uppercase & one number.</p>}
                   </div>
 
                   {isSignup && (
                     <div className="overflow-hidden transition-all duration-300">
-                      <label className="mb-2 block text-sm text-gray-300">Confirm Password</label>
+                      <label className="mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Confirm Password</label>
                       <div className="relative">
-                        <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); clearFieldError("confirmPassword"); }} placeholder="••••••••" className={`h-12 w-full rounded-xl border bg-white/5 px-4 pr-12 text-white outline-none transition focus:ring-2 ${fieldErrors.confirmPassword ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-white/10 focus:border-blue-500 focus:ring-blue-500/20"}`} />
-                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 cursor-pointer -translate-y-1/2 text-gray-400 hover:text-white" title={showConfirmPassword ? "Hide Password" : "Show Password"}>{showConfirmPassword ? <RiEyeCloseLine /> : <PiEye />}</button>
+                        <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); clearFieldError("confirmPassword"); }} placeholder="••••••••" className={`h-12 w-full rounded-xl border bg-transparent px-4 pr-12 text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none transition focus:ring-2 ${fieldErrors.confirmPassword ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-neutral-200 dark:border-white/10 focus:border-neutral-900 dark:focus:border-white focus:ring-neutral-900/10 dark:focus:ring-white/10"}`} />
+                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 cursor-pointer -translate-y-1/2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white" title={showConfirmPassword ? "Hide Password" : "Show Password"}>{showConfirmPassword ? <RiEyeCloseLine /> : <PiEye />}</button>
                       </div>
-                      {fieldErrors.confirmPassword && <p className="mt-1.5 text-xs text-red-400">{fieldErrors.confirmPassword}</p>}
+                      {fieldErrors.confirmPassword && <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{fieldErrors.confirmPassword}</p>}
                     </div>
                   )}
 
                   {!isSignup && (
-                    <label className="flex items-center gap-3 text-sm text-gray-400">
-                      <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="h-4 w-4 rounded border-white/20 bg-white/10" />
+                    <label className="flex items-center gap-3 text-sm text-neutral-600 dark:text-neutral-400 cursor-pointer">
+                      <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="h-4 w-4 rounded border-neutral-300 dark:border-white/20 bg-transparent text-neutral-900 dark:text-white focus:ring-neutral-900/20 cursor-pointer" />
                       Remember me
                     </label>
                   )}
@@ -339,39 +337,37 @@ function LoginContent() {
 
               {pendingVerification && (
                 <div className="overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-top-2">
-                  <label className="mb-2 block text-sm text-gray-300">Verification Code</label>
-                  <input value={code} onChange={(e) => { setCode(e.target.value); clearFieldError("code"); }} placeholder="123456" inputMode="numeric" maxLength={6} className={`h-12 w-full rounded-xl border bg-white/5 px-4 text-white tracking-[0.4em] outline-none transition focus:ring-2 ${fieldErrors.code ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-white/10 focus:border-blue-500 focus:ring-blue-500/20"}`} />
-                  {fieldErrors.code && <p className="mt-1.5 text-xs text-red-400">{fieldErrors.code}</p>}
-                  <button type="button" onClick={handleResendCode} className="mt-2 text-xs text-blue-400 hover:text-blue-300 transition">Resend code</button>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Verification Code</label>
+                  <input value={code} onChange={(e) => { setCode(e.target.value); clearFieldError("code"); }} placeholder="123456" inputMode="numeric" maxLength={6} className={`h-12 w-full rounded-xl border bg-transparent px-4 text-neutral-900 dark:text-white tracking-[0.4em] outline-none transition focus:ring-2 ${fieldErrors.code ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/20" : "border-neutral-200 dark:border-white/10 focus:border-neutral-900 dark:focus:border-white focus:ring-neutral-900/10 dark:focus:ring-white/10"}`} />
+                  {fieldErrors.code && <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{fieldErrors.code}</p>}
+                  <button type="button" onClick={handleResendCode} className="mt-2 text-xs text-neutral-900 dark:text-white hover:underline transition font-medium">Resend code</button>
                 </div>
               )}
 
-              {error && <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
+              {error && <div className="rounded-xl border border-red-500/20 bg-red-50 dark:bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-400">{error}</div>}
 
-              <button disabled={loading} className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-60 hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/30">
+              <button disabled={loading} className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white font-medium text-white dark:text-neutral-900 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60 hover:bg-neutral-800 dark:hover:bg-neutral-200 cursor-pointer shadow-md">
                 {loading ? pendingVerification ? "Verifying..." : isSignup ? "Creating Account..." : "Signing In..." : pendingVerification ? "Verify Email" : isSignup ? "Create Account" : "Continue"}
-                <span className="transition group-hover:translate-x-1">→</span>
+                <span className="transition-transform group-hover:translate-x-1">→</span>
               </button>
 
               {!pendingVerification && (
-                <p className="pt-3 text-center text-sm text-gray-500">
+                <p className="pt-3 text-center text-sm text-neutral-600 dark:text-neutral-400">
                   {isSignup ? "Already have an account?" : "Don't have an account?"}
-                  <button type="button" onClick={() => { setIsSignup(!isSignup); resetAuthState(); }} className="ml-2 font-medium text-blue-400 hover:text-blue-300 transition">
+                  <button type="button" onClick={() => { setIsSignup(!isSignup); resetAuthState(); }} className="ml-2 font-bold text-neutral-900 dark:text-white hover:underline transition cursor-pointer">
                     {isSignup ? "Sign In" : "Create Account"}
                   </button>
                 </p>
               )}
 
               {pendingVerification && (
-                <p className="pt-3 text-center text-sm text-gray-500">
+                <p className="pt-3 text-center text-sm text-neutral-600 dark:text-neutral-400">
                   Entered the wrong email?
-                  <button type="button" onClick={() => resetAuthState()} className="ml-2 font-medium text-blue-400 hover:text-blue-300 transition">Go back</button>
+                  <button type="button" onClick={() => resetAuthState()} className="ml-2 font-bold text-neutral-900 dark:text-white hover:underline transition cursor-pointer">Go back</button>
                 </p>
               )}
             </form>
 
-            {/* 🔥 MOVED: Clerk Smart CAPTCHA mount point is now unconditionally rendered outside the form logic */}
-            {/* <div id="clerk-captcha" /> */}
           </div>
         </section>
       </div>
@@ -381,7 +377,7 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0B0F17]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-neutral-50 dark:bg-[#06070a]" />}>
       <LoginContent />
     </Suspense>
   );

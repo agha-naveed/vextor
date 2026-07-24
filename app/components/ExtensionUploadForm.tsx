@@ -44,31 +44,32 @@ export default function ExtensionUploadForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto rounded-lg border border-[#232838] bg-[#0B0E14] shadow-2xl shadow-black/40 overflow-hidden">
-      {/* TERMINAL WINDOW CHROME */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-[#12161F] border-b border-[#232838]">
-        <span className="h-2.5 w-2.5 rounded-full bg-[#FB7185]/70" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[#FBBF77]/70" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[#5EEAD4]/70" />
-        <span className="ml-3 font-mono text-xs text-[#7C8494] tracking-wide">
+    <div className="max-w-2xl mx-auto rounded-3xl border border-neutral-200 dark:border-white/10 bg-white/80 dark:bg-[#06070a]/80 shadow-xl shadow-black/5 dark:shadow-none overflow-hidden backdrop-blur-2xl transition-colors duration-300 w-full mt-8">
+      
+      {/* MONOCHROME TERMINAL WINDOW CHROME */}
+      <div className="flex items-center gap-2 px-4 sm:px-6 py-3.5 bg-neutral-50/80 dark:bg-white/[0.02] border-b border-neutral-200 dark:border-white/10 transition-colors">
+        <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 dark:border-white/20 bg-transparent" />
+        <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 dark:border-white/20 bg-transparent" />
+        <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 dark:border-white/20 bg-transparent" />
+        <span className="ml-3 font-mono text-xs text-neutral-500 dark:text-neutral-400 tracking-wide">
           vextor — publish extension
         </span>
       </div>
 
-      <div className="p-6">
-        <h2 className="text-xl font-semibold text-[#E4E7EC] mb-1">Publish extension</h2>
-        <p className="text-sm text-[#7C8494] mb-5">
+      <div className="p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2 tracking-tight transition-colors">Publish extension</h2>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6 transition-colors">
           Upload a package to run it through the security scanner before it goes live.
         </p>
 
-        <form onSubmit={handleUpload} className="space-y-4">
+        <form onSubmit={handleUpload} className="space-y-6">
           <label
             htmlFor="extension-file"
-            className="group relative block cursor-pointer rounded-md border border-dashed border-[#2E3444] bg-[#0E1219] px-6 py-10 text-center transition-colors hover:border-[#5EEAD4]/60"
+            className="group relative block cursor-pointer rounded-2xl border border-dashed border-neutral-300 dark:border-white/20 bg-transparent px-6 py-12 text-center transition-all hover:border-neutral-900 dark:hover:border-white"
           >
             {loading && (
-              <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-md">
-                <span className="absolute left-0 top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-[#5EEAD4]/10 to-transparent animate-[scan_1.4s_linear_infinite]" />
+              <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+                <span className="absolute left-0 top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-neutral-900/5 dark:via-white/10 to-transparent animate-[scan_1.4s_linear_infinite]" />
               </span>
             )}
 
@@ -81,7 +82,7 @@ export default function ExtensionUploadForm() {
             />
 
             <svg
-              className="mx-auto mb-3 h-7 w-7 text-[#3A4256] group-hover:text-[#5EEAD4]/70 transition-colors"
+              className="mx-auto mb-4 h-8 w-8 text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -92,11 +93,11 @@ export default function ExtensionUploadForm() {
             </svg>
 
             {file ? (
-              <p className="font-mono text-sm text-[#5EEAD4]">{file.name}</p>
+              <p className="font-mono text-sm font-medium text-neutral-900 dark:text-white transition-colors">{file.name}</p>
             ) : (
               <>
-                <p className="text-sm text-[#B5BAC6]">Drop a .zip or .vsix, or click to browse</p>
-                <p className="mt-1 text-xs text-[#5C6478]">Scanned automatically on upload</p>
+                <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 transition-colors">Drop a .zip or .vsix, or click to browse</p>
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-500 transition-colors">Scanned automatically on upload</p>
               </>
             )}
           </label>
@@ -104,11 +105,11 @@ export default function ExtensionUploadForm() {
           <button
             type="submit"
             disabled={!file || loading}
-            className="w-full py-3 rounded-md bg-[#5EEAD4] text-[#0B0E14] font-semibold text-sm tracking-wide transition-opacity hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium text-sm transition-all duration-200 hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-md"
           >
             {loading ? (
               <>
-                <span className="h-1.5 w-1.5 rounded-full bg-[#0B0E14] animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-white dark:bg-neutral-900 animate-pulse" />
                 Scanning code…
               </>
             ) : (
@@ -119,28 +120,28 @@ export default function ExtensionUploadForm() {
 
         {/* SUCCESS MESSAGE */}
         {status === "SUCCESS" && (
-          <div className="mt-6 rounded-md border border-[#34D399]/30 bg-[#34D399]/[0.07] px-4 py-3">
-            <p className="text-sm font-medium text-[#34D399]">{message}</p>
+          <div className="mt-6 rounded-xl border border-green-500/20 bg-green-50 dark:bg-green-500/10 px-4 py-3 animate-in fade-in slide-in-from-top-2">
+            <p className="text-sm font-medium text-green-700 dark:text-green-400">{message}</p>
           </div>
         )}
 
         {/* SECURITY VIOLATIONS UI */}
         {status === "ERROR" && (
-          <div className="mt-6 rounded-md border border-[#FB7185]/30 bg-[#FB7185]/[0.06] px-4 py-3">
-            <p className="text-sm font-medium text-[#FB7185] mb-1">{message}</p>
+          <div className="mt-6 rounded-xl border border-red-500/20 bg-red-50 dark:bg-red-500/10 p-4 sm:p-5 animate-in fade-in slide-in-from-top-2">
+            <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">{message}</p>
 
             {violations.length > 0 && (
-              <div className="mt-3 space-y-3 max-h-64 overflow-y-auto pr-1">
+              <div className="mt-4 space-y-3 max-h-64 overflow-y-auto pr-1">
                 {violations.map((v, idx) => (
-                  <div key={idx} className="rounded-md bg-black/30 border border-[#232838] p-3">
-                    <p className="font-mono text-xs text-[#B5BAC6] mb-2 pb-1.5 border-b border-[#232838]">
+                  <div key={idx} className="rounded-xl bg-white dark:bg-black/20 border border-neutral-200 dark:border-white/10 p-3 sm:p-4">
+                    <p className="font-mono text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-2 pb-2 border-b border-neutral-200 dark:border-white/10">
                       {v.file}
                     </p>
-                    <ul className="space-y-1">
+                    <ul className="space-y-1.5">
                       {v.issues.map((issue, i) => (
-                        <li key={i} className="flex gap-2 text-xs text-[#FB7185]/90 font-mono">
-                          <span className="text-[#FB7185]/50">•</span>
-                          {issue}
+                        <li key={i} className="flex gap-2 text-xs text-red-600 dark:text-red-400 font-mono">
+                          <span className="text-red-600/50 dark:text-red-400/50 flex-shrink-0">•</span>
+                          <span className="leading-relaxed">{issue}</span>
                         </li>
                       ))}
                     </ul>
