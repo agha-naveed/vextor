@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { PiEye } from "react-icons/pi";
+import { useAuth } from "@clerk/nextjs";
 
 type FieldErrors = {
   name?: string;
@@ -31,6 +32,8 @@ function LoginContent() {
   const { isLoaded: isSignInLoaded, signIn, setActive: setActiveSignIn } = useSignIn();
   const { isLoaded: isSignUpLoaded, signUp, setActive: setActiveSignUp } = useSignUp();
 
+  const { isLoaded: isAuthLoaded, isSignedIn } = useAuth();
+
   const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url"));
 
   const completeAuthRedirect = () => {
@@ -40,6 +43,12 @@ function LoginContent() {
       router.push(redirectUrl);
     }
   };
+
+  useEffect(() => {
+    if (isAuthLoaded && isSignedIn) {
+      completeAuthRedirect();
+    }
+  }, [isAuthLoaded, isSignedIn, redirectUrl]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
