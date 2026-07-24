@@ -13,7 +13,6 @@ import Community from "./components/Community";
 import IntegrationGrid from "./components/IntegrationGrid";
 import Footer from "./components/Footer";
 import AboutDeveloper from "./components/AboutDeveloper";
-import StatsBar from "./components/StatsBar";
 import ComparisonTable from "./components/ComparisonTable";
 import DownloadCTA from "./components/DownloadCTA";
 
