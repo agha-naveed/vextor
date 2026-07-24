@@ -5,6 +5,7 @@ import { Providers } from "./components/theme-provider";
 import Navbar from "./components/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import AnimatedBackground from "./components/AnimatedBackground";
+import CustomCursor from "./components/CustomCursor";
 
 const openSans = Open_Sans({
   variable: "--font-openSans",
@@ -84,6 +85,7 @@ export default function RootLayout({
           className={`${openSans.variable} ${roboto.variable} antialiased w-full bg-main`}
         >
           <Providers>
+            <CustomCursor />
             <Navbar />
             <AnimatedBackground />
             {children}

@@ -13,12 +13,12 @@ if (typeof window !== "undefined") {
 const plans = [
     {
         name: "Hobby",
-        desc: "For personal projects and getting familiar with Vextor.",
+        desc: "For tinkerers exploring the editor.",
         price: "$0",
         cycle: "forever",
         features: [
-            "Unlimited local autocomplete",
-            "50 cloud AI requests / month",
+            "Core editor & local autocomplete",
+            "Powered by free API keys (subject to rate limits)",
             "Single-file edits",
             "Community support"
         ],
@@ -28,34 +28,32 @@ const plans = [
     {
         name: "Pro",
         badge: "Most popular",
-        desc: "For engineers shipping daily who want agentic help.",
-        price: "$22",
+        desc: "For engineers shipping daily who need advanced agentic power.",
+        price: "$20",
         span: "/mo",
-        cycle: "billed monthly, or $18/mo annual",
+        cycle: "billed monthly",
         features: [
-            "Everything in Hobby",
-            "Unlimited cloud AI requests",
-            "Multi-file & background agents",
-            "Full repo indexing, up to 5 repos",
-            "Priority model access"
+            "Everything in Hobby, plus:",
+            "Extended request limits with zero throttling",
+            "Access to well-trained, high-performance AI models",
+            "Multi-file auto-handling & smart refactoring",
+            "Full repository semantic indexing"
         ],
         btnText: "Start Pro trial",
         featured: true
     },
     {
-        name: "Team",
-        desc: "For organizations that need control and visibility.",
-        price: "$38",
+        name: "Teams",
+        desc: "For organizations that build and ship together.",
+        price: "$40",
         span: "/user/mo",
         cycle: "billed annually",
         features: [
-            "Everything in Pro",
-            "SSO & centralized billing",
-            "Unlimited private repo indexing",
-            "Audit logs & usage analytics",
-            "Dedicated support channel"
+            "Everything in Pro, plus:",
+            "Centralized team billing and administration",
+            "Usage analytics and audit logs"
         ],
-        btnText: "Talk to sales",
+        btnText: "Get Teams",
         featured: false
     }
 ];
@@ -97,10 +95,10 @@ export default function Pricing() {
                     Pricing
                 </h2>
                 <p className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white tracking-tighter mb-6">
-                    Start free. Scale when your team does.
+                    Start free. Scale when your workflow demands it.
                 </p>
                 <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-                    Every plan includes the full editor. Paid tiers add cloud compute for agents and larger context windows.
+                    Choose the plan that fits your coding velocity. Upgrade anytime for higher limits and multi-file intelligence.
                 </p>
             </div>
 
@@ -144,7 +142,7 @@ export default function Pricing() {
                         </ul>
 
                         <button 
-                            className={`w-full py-4 rounded-xl font-bold text-sm transition-all duration-300
+                            className={`w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 cursor-pointer
                                 ${plan.featured 
                                     ? "bg-primary hover:opacity-90 text-white shadow-[0_0_20px_var(--color-primary)]" 
                                     : "bg-neutral-100 hover:bg-neutral-200 dark:bg-white/5 dark:hover:bg-white/10 text-neutral-900 dark:text-white border border-transparent dark:border-white/10"

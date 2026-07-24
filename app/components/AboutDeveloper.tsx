@@ -67,9 +67,6 @@ export default function AboutDeveloper() {
                 </span>
             </div>
 
-            {/* Ambient Glow */}
-            <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[40vw] h-[40vw] bg-primary/10 dark:bg-primary/5 blur-[120px] rounded-full pointer-events-none -z-10" />
-
             <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
                 {/* Left Column: Image Box */}
@@ -150,7 +147,7 @@ export default function AboutDeveloper() {
                         </div>
 
                         {/* Inverse Button Logic for Themes */}
-                        <button onClick={() => setIsOpen(true)} className="group relative flex items-center gap-3 px-8 py-4 bg-neutral-900 text-white dark:bg-white dark:text-black font-bold text-xs uppercase tracking-widest rounded-full overflow-hidden transition-all duration-300 hover:pr-12 hover:bg-primary dark:hover:bg-primary dark:hover:text-white">
+                        <button onClick={() => setIsOpen(true)} className="group relative flex items-center gap-3 px-8 py-4 bg-neutral-900 text-white dark:bg-white dark:text-black font-bold text-xs uppercase tracking-widest rounded-full overflow-hidden transition-all duration-300 hover:pr-12 hover:bg-primary dark:hover:bg-primary dark:hover:text-white cursor-pointer">
                             <span>Let's Build</span>
                             <LuCodeXml className="w-4 h-4 absolute right-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
                         </button>
