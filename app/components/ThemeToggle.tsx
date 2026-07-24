@@ -33,7 +33,7 @@ export default function ThemeToggle() {
             </div>
 
             <div
-                className={`w-5 h-5 rounded-full bg-indigo-500 shadow-md transform transition-transform duration-300 ease-spring z-10 ${isDark ? "translate-x-1" : "translate-x-8"
+                className={`w-5 h-5 rounded-full bg-primary shadow-md transform transition-transform duration-300 ease-spring z-10 ${isDark ? "translate-x-1" : "translate-x-8"
                     }`}
             />
         </button>

@@ -23,32 +23,28 @@ export default function Community() {
 
     const testimonials = [
         {
-            name: "Alex Chen",
-            role: "Frontend Engineer",
-            handle: "@alexc_dev",
+            name: "Rina Kapoor",
+            role: "Staff Engineer, fintech platform",
+            handle: "@rinak_dev",
             icon: FaTwitter,
-            quote: "Vextor AI feels like it reads my mind. The predictive autocomplete doesn't just guess syntax; it anticipates the actual architecture I'm trying to build."
+            quote: "We migrated a 40-person team off two different editors in a week. The repo indexing means suggestions actually match our internal libraries instead of guessing at public APIs.",
+            avatarColor: "bg-primary text-black"
         },
         {
-            name: "Sarah Lee",
-            role: "Fullstack Developer",
-            handle: "@sarahcodes",
+            name: "Daniel Moreau",
+            role: "Engineering Manager, logistics SaaS",
+            handle: "@dmoreau",
             icon: FaGithub,
-            quote: "As someone who jumps between Rust and TypeScript daily, having a single, lightning-fast runtime that understands both without configuration is a game changer."
+            quote: "Background agents cleared our dependency-upgrade backlog overnight. I reviewed six pull requests over coffee instead of writing them myself.",
+            avatarColor: "bg-[#6EE7FF] text-black"
         },
         {
-            name: "David Kim",
-            role: "DevOps Specialist",
-            handle: "@dkim_ops",
+            name: "Ayo Tunde",
+            role: "Founding engineer, dev tools startup",
+            handle: "@ayo_builds",
             icon: FaTwitter,
-            quote: "The fact that this runs locally and my code never leaves my machine was the deciding factor. It's secure, incredibly fast, and beautifully designed."
-        },
-        {
-            name: "Elena Rostova",
-            role: "Systems Architect",
-            handle: "@erostova",
-            icon: FaGithub,
-            quote: "I've tried every AI coding assistant on the market. Vextor is the only one that feels like a native extension of my own thought process rather than a clunky plugin."
+            quote: "The diff-first review model is what sold me. Nothing gets written to disk without me seeing exactly what changed and why, line by line.",
+            avatarColor: "bg-[#FFB454] text-black"
         }
     ];
 
@@ -143,11 +139,11 @@ export default function Community() {
 
             {/* Header Section */}
             <div className="testimonial-intro opacity-0 text-center mb-16 relative z-10">
-                <h2 className="text-xs font-black text-indigo-600 dark:text-indigo-500 tracking-[0.4em] uppercase mb-4">
-                    Community Validated
+                <h2 className="text-xs font-black text-primary tracking-[0.4em] uppercase mb-4">
+                    From the changelog of real teams
                 </h2>
                 <p className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tighter mb-6">
-                    Trusted by engineers.
+                    Engineers who switched and stayed.
                 </p>
                 <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
                     Join the developers who have already made the switch to a frictionless workflow.
@@ -180,7 +176,7 @@ export default function Community() {
                         {loopedTestimonials.map((user, i) => (
                             <div
                                 key={i}
-                                className="w-[300px] md:w-[400px] shrink-0 bg-slate-50 dark:bg-[#0d0e12] p-8 rounded-3xl border border-slate-200 dark:border-white/5 transition-colors hover:border-indigo-500/30 flex flex-col justify-between"
+                                className="w-[300px] md:w-[400px] shrink-0 bg-slate-50 dark:bg-[#121729] p-8 rounded-3xl border border-slate-200 dark:border-white/5 transition-colors hover:border-primary/30 flex flex-col justify-between"
                             >
                                 <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-8 pointer-events-none">
                                     "{user.quote}"
@@ -188,8 +184,9 @@ export default function Community() {
 
                                 <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-white/5 pointer-events-none">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shrink-0">
-                                            {user.name.charAt(0)}
+                                        {/* Avatar mapping logic extracts initials (e.g., RK) */}
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${user.avatarColor}`}>
+                                            {user.name.split(" ").map(n => n[0]).join("")}
                                         </div>
                                         <div>
                                             <h4 className="text-slate-900 dark:text-white font-bold text-xs">{user.name}</h4>

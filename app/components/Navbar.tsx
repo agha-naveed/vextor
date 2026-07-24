@@ -1,4 +1,4 @@
-import logo from "@/images/logo.png"
+import logo from "@/images/logo2.png"
 import ThemeToggle from './ThemeToggle';
 import Image from "next/image";
 import { BsSearch } from "react-icons/bs";
