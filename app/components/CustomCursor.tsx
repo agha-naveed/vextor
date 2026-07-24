@@ -1,128 +1,163 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface TrailPoint {
-    x: number;
-    y: number;
-    id: number;
-}
+import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
-    const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
-    const [cursorPosition, setCursorPosition] = useState({ x: -100, y: -100 });
-    const [trail, setTrail] = useState<TrailPoint[]>([]);
-    const [isHovered, setIsHovered] = useState(false);
-    const [isClicked, setIsClicked] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const ringRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (window.matchMedia("(pointer: coarse)").matches) return;
-        setIsVisible(true);
 
+        const canvas = canvasRef.current;
+        const ring = ringRef.current;
+        if (!canvas || !ring) return;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        document.documentElement.classList.add("cursor-none");
+
+        let width = (canvas.width = window.innerWidth);
+        let height = (canvas.height = window.innerHeight);
+
+        const TRAIL_LENGTH = 25; 
+        const SPRING = 0.45;
+
+        const mouse = { x: width / 2, y: height / 2 };
+        const cursor = { x: mouse.x, y: mouse.y };
+        const trail: any[] = Array.from({ length: TRAIL_LENGTH }, () => ({ x: mouse.x, y: mouse.y }));
+
+        let isHovered = false;
+        let isClicked = false;
         let animationFrameId: number;
-        let counter = 0;
 
-        const handleMouseMove = (e: MouseEvent) => {
-            const newX = e.clientX;
-            const newY = e.clientY;
-            setMousePosition({ x: newX, y: newY });
+        const onResize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        };
 
-            // Generate spread trail points
-            counter++;
-            if (counter % 2 === 0) {
-                setTrail((prev) => [
-                    { x: newX, y: newY, id: Date.now() + Math.random() },
-                    ...prev.slice(0, 14) // Spread length
-                ]);
-            }
+        const onMouseMove = (e: MouseEvent) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
 
             const target = e.target as HTMLElement;
-            const interactiveElement = target.closest("a, button, input, textarea, [role='button']");
-            setIsHovered(!!interactiveElement);
+            isHovered = !!target.closest("a, button, input, textarea, [role='button'], [data-cursor='link']");
         };
 
-        const handleMouseDown = () => setIsClicked(true);
-        const handleMouseUp = () => setIsClicked(false);
-        const handleMouseLeave = () => setIsVisible(false);
-        const handleMouseEnter = () => setIsVisible(true);
+        const onMouseDown = () => (isClicked = true);
+        const onMouseUp = () => (isClicked = false);
 
-        window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mousedown", handleMouseDown);
-        window.addEventListener("mouseup", handleMouseUp);
-        document.addEventListener("mouseleave", handleMouseLeave);
-        document.addEventListener("mouseenter", handleMouseEnter);
+        window.addEventListener("resize", onResize);
+        window.addEventListener("mousemove", onMouseMove, { passive: true });
+        window.addEventListener("mousedown", onMouseDown);
+        window.addEventListener("mouseup", onMouseUp);
 
-        const updateCursor = () => {
-            setCursorPosition((prev) => {
-                const dx = mousePosition.x - prev.x;
-                const dy = mousePosition.y - prev.y;
-                return {
-                    x: prev.x + dx * 0.15,
-                    y: prev.y + dy * 0.15,
-                };
-            });
-            animationFrameId = requestAnimationFrame(updateCursor);
+        const render = () => {
+            ctx.clearRect(0, 0, width, height);
+
+            cursor.x += (mouse.x - cursor.x) * SPRING;
+            cursor.y += (mouse.y - cursor.y) * SPRING;
+
+            trail.push({ x: cursor.x, y: cursor.y });
+            if (trail.length > TRAIL_LENGTH) trail.shift();
+
+            const isDark = document.documentElement.classList.contains("dark");
+            const cometColor = isDark ? "rgba(255, 255, 255, 1)" : "rgba(15, 15, 15, 1)";
+            
+            ctx.fillStyle = cometColor;
+            
+            // Adjusted shadow blur to fit the smaller size
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = isDark ? "rgba(255, 255, 255, 0.6)" : "rgba(15, 15, 15, 0.4)";
+
+            // Made the base radius smaller (from 14 down to 8)
+            const headRadius = isHovered ? 2.5 : 8; 
+
+            if (trail.length > 1) {
+                ctx.beginPath();
+                let lastAngle = 0;
+
+                for (let i = 0; i < trail.length; i++) {
+                    const p = trail[i];
+                    const nextP = trail[i + 1] || p;
+                    const dx = nextP.x - p.x;
+                    const dy = nextP.y - p.y;
+
+                    if (dx === 0 && dy === 0) {
+                        p.angle = lastAngle;
+                    } else {
+                        p.angle = Math.atan2(dy, dx);
+                        lastAngle = p.angle;
+                    }
+
+                    const progress = i / (trail.length - 1);
+                    const eased = Math.pow(progress, 4); 
+                    const radius = headRadius * eased; 
+                    const finalRadius = Math.max(0.1, radius);
+
+                    p.leftX = p.x + Math.cos(p.angle + Math.PI / 2) * finalRadius;
+                    p.leftY = p.y + Math.sin(p.angle + Math.PI / 2) * finalRadius;
+                    p.rightX = p.x + Math.cos(p.angle - Math.PI / 2) * finalRadius;
+                    p.rightY = p.y + Math.sin(p.angle - Math.PI / 2) * finalRadius;
+                    p.radius = finalRadius;
+                }
+
+                ctx.moveTo(trail[0].rightX, trail[0].rightY);
+                for (let i = 1; i < trail.length; i++) {
+                    ctx.lineTo(trail[i].rightX, trail[i].rightY);
+                }
+
+                const head = trail[trail.length - 1];
+                ctx.arc(head.x, head.y, head.radius, head.angle - Math.PI / 2, head.angle + Math.PI / 2);
+
+                for (let i = trail.length - 2; i >= 0; i--) {
+                    ctx.lineTo(trail[i].leftX, trail[i].leftY);
+                }
+
+                const tail = trail[0];
+                ctx.arc(tail.x, tail.y, tail.radius, tail.angle + Math.PI / 2, tail.angle - Math.PI / 2);
+
+                ctx.fill();
+            }
+
+            // THE FIX: Always draw a perfect full circle on top of the head coordinates.
+            // This guarantees the front is never flattened into a half-circle when you stop moving.
+            ctx.beginPath();
+            ctx.arc(cursor.x, cursor.y, headRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            const scale = isClicked ? 0.7 : isHovered ? 1.8 : 1;
+            const opacity = isHovered ? 1 : 0;
+            ring.style.transform = `translate3d(${cursor.x}px, ${cursor.y}px, 0) translate(-50%, -50%) scale(${scale})`;
+            ring.style.opacity = opacity.toString();
+
+            animationFrameId = requestAnimationFrame(render);
         };
 
-        animationFrameId = requestAnimationFrame(updateCursor);
+        animationFrameId = requestAnimationFrame(render);
 
         return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mousedown", handleMouseDown);
-            window.removeEventListener("mouseup", handleMouseUp);
-            document.removeEventListener("mouseleave", handleMouseLeave);
-            document.removeEventListener("mouseenter", handleMouseEnter);
+            window.removeEventListener("resize", onResize);
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("mousedown", onMouseDown);
+            window.removeEventListener("mouseup", onMouseUp);
+            document.documentElement.classList.remove("cursor-none");
             cancelAnimationFrame(animationFrameId);
         };
-    }, [mousePosition.x, mousePosition.y]);
-
-    if (!isVisible) return null;
+    }, []);
 
     return (
-        <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden hidden lg:block">
-            {/* Spread Trailing Particle Nodes */}
-            {trail.map((point, index) => {
-                const opacity = 1 - index / trail.length;
-                const scale = 1 - (index / trail.length) * 0.7;
-                return (
-                    <div
-                        key={point.id}
-                        className="absolute rounded-full bg-neutral-400/30 dark:bg-white/20 -translate-x-1/2 -translate-y-1/2 transition-all duration-75"
-                        style={{
-                            left: `${point.x}px`,
-                            top: `${point.y}px`,
-                            width: `${14 * scale}px`,
-                            height: `${14 * scale}px`,
-                            opacity: opacity * 0.4,
-                        }}
-                    />
-                );
-            })}
-
-            {/* Precise Core Dot */}
-            <div
-                className="absolute h-2.5 w-2.5 rounded-full bg-neutral-900 dark:bg-white -translate-x-1/2 -translate-y-1/2 shadow-sm transition-transform duration-75"
-                style={{
-                    left: `${mousePosition.x}px`,
-                    top: `${mousePosition.y}px`,
-                    transform: `translate(-50%, -50%) scale(${isClicked ? 0.5 : isHovered ? 1.8 : 1})`,
-                }}
+        <>
+            <canvas
+                ref={canvasRef}
+                className="pointer-events-none fixed inset-0 z-[9998] hidden lg:block"
             />
-
-            {/* Smooth Floating Outer Ring */}
             <div
-                className={`absolute rounded-full border border-neutral-400 dark:border-white/40 -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-out ${
-                    isHovered 
-                        ? "w-20 h-20 bg-neutral-900/5 dark:bg-white/10 border-neutral-900 dark:border-white scale-110" 
-                        : "w-12 h-12 scale-100"
-                }`}
-                style={{
-                    left: `${cursorPosition.x}px`,
-                    top: `${cursorPosition.y}px`,
-                    transform: `translate(-50%, -50%) scale(${isClicked ? 0.8 : isHovered ? 1.25 : 1})`,
-                }}
+                ref={ringRef}
+                className="pointer-events-none fixed left-0 top-0 z-[9999] hidden lg:block h-10 w-10 rounded-full border border-neutral-900/40 dark:border-white/40 bg-neutral-900/5 dark:bg-white/5 transition-all duration-200 ease-out will-change-transform"
+                style={{ opacity: 0 }}
             />
-        </div>
+        </>
     );
 }
