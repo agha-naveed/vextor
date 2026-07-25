@@ -9,6 +9,7 @@ import { IoSparklesSharp } from 'react-icons/io5';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
+import Image from 'next/image';
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -90,9 +91,9 @@ export default function IdeMockup() {
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top 20%",
-                    end: "center 50%",
-                    scrub: 1,
+                    start: "top 70%",
+                    end: "center 30%",
+                    scrub: 1.1,
                 }
             }
         );
@@ -120,7 +121,9 @@ export default function IdeMockup() {
                 {/* Top Menu Bar */}
                 <div className="h-9 w-full bg-neutral-100 dark:bg-[#0A0D14] border-b border-neutral-200 dark:border-white/5 flex items-center justify-between pl-4 select-none transition-colors">
                     <div className="flex items-center gap-1 shrink-0">
-                        <span className="text-primary text-lg font-black mr-2">❯</span>
+                        <span className="text-primary text-lg font-black mr-2">
+                            <Image src={"/images/logo2.png"} alt='Vextor Logo' width={13} height={13} />
+                        </span>
                         <div className="flex items-center gap-4 text-xs text-neutral-500 dark:text-slate-400 font-sans hidden sm:flex">
                             <span className="hover:text-neutral-900 dark:hover:text-white cursor-pointer transition-colors">File</span>
                             <span className="hover:text-neutral-900 dark:hover:text-white cursor-pointer transition-colors">Edit</span>
