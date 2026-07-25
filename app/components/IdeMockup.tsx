@@ -81,17 +81,16 @@ export default function IdeMockup() {
     }, [isTerminalOpen]);
 
     useGSAP(() => {
-        // Fixes overflow by scaling UP to 1, instead of scaling past 1.
         gsap.fromTo(".ide-window", 
-            { scale: 1, opacity: 0.8, y: 40 },
+            { scale: 0.8, opacity: 0.8, y: 0 },
             {
-                scale: 1.13,
+                scale: 1,
                 opacity: 1,
                 y: 0,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top 30%",
+                    start: "top 20%",
                     end: "center 50%",
                     scrub: 1,
                 }
@@ -100,7 +99,7 @@ export default function IdeMockup() {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="gsap-ide relative max-w-5xl mx-auto px-4 mb-32 isolate">
+        <section ref={containerRef} className="gsap-ide relative max-w-7xl mx-auto px-4 mb-32 isolate">
             
             {/* Dynamic CSS for Light/Dark Scrollbars */}
             <style>{`
