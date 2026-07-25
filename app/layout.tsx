@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Open_Sans, Roboto_Condensed } from "next/font/google";
+import { Fira_Code, Open_Sans, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/theme-provider";
 import Navbar from "./components/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import AnimatedBackground from "./components/AnimatedBackground";
 import CustomCursor from "./components/CustomCursor";
+import SmoothScrollLayout from "./components/SmoothScrollLayout";
 
 const openSans = Open_Sans({
   variable: "--font-openSans",
@@ -18,7 +19,7 @@ const roboto = Roboto_Condensed({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vextor AI | An AI-Powered IDE",
+    default: "Vextor | An AI-Powered IDE",
     template: "%s | Vextor AI",
   },
   description: "Code without fear. Understand without limits. Vextor AI is a native polyglot IDE engineered with Rust and Go, featuring a crash-proof Natural Language Terminal and offline-first AI inference.",
@@ -82,13 +83,15 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${openSans.variable} ${roboto.variable} antialiased w-full bg-main`}
+          className={`${openSans.variable} ${roboto.variable} selection:bg-primary selection:text-white dark:selection:text-primary dark:selection:bg-white antialiased w-full bg-main`}
         >
           <Providers>
-            <CustomCursor />
-            <Navbar />
-            <AnimatedBackground />
-            {children}
+            <SmoothScrollLayout>
+              <CustomCursor />
+              <Navbar />
+              <AnimatedBackground />
+              {children}
+            </SmoothScrollLayout>
           </Providers>
         </body>
       </html>

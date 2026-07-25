@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+
 @theme {
   --color-main: #F5F9FA;
   --color-primary: #28AB7B;
@@ -13,8 +14,27 @@
 }
 
 * {
-  font-family: var(--font-openSans);
   scroll-behavior: smooth;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 body {
@@ -23,6 +43,8 @@ body {
     radial-gradient(circle at 15% 0%, rgba(51, 242, 192, 0.07), transparent 40%),
     radial-gradient(circle at 85% 15%, rgba(110, 231, 255, 0.06), transparent 45%);
   background-repeat: no-repeat;
+  font-family: var(--font-openSans);
+
 }
 
 .animate-fade {
