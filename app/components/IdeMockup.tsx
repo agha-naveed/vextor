@@ -21,6 +21,35 @@ const FILES = {
         icon: 'react', color: 'text-orange-400',
         code: (
             <>
+            <div><span className="text-purple-600 dark:text-purple-400">import</span> {"{"} useState, useEffect {"}"} <span className="text-purple-600 dark:text-purple-400">from</span> <span className="text-amber-600 dark:text-amber-300">'react'</span>;</div>
+            <div><span className="text-purple-600 dark:text-purple-400">import</span> {"{"} useGSAP {"}"} <span className="text-purple-600 dark:text-purple-400">from</span> <span className="text-amber-600 dark:text-amber-300">'@gsap/react'</span>;</div>
+            <div className="h-5"></div>
+            <div className="text-slate-400 dark:text-slate-500 italic">// AI Copilot Stream Processor</div>
+            <div><span className="text-purple-600 dark:text-purple-400">export default function</span> <span className="text-blue-600 dark:text-blue-300">AICopilot</span>({"{"} stream {"}"}: <span className="text-emerald-600 dark:text-emerald-300">StreamProps</span>) {"{"}</div>
+            <div className="pl-4"><span className="text-purple-600 dark:text-purple-400">const</span> [output, setOutput] = <span className="text-blue-600 dark:text-blue-300">useState</span>(<span className="text-amber-600 dark:text-amber-300">""</span>);</div>
+            <div className="h-5"></div>
+            <div className="pl-4"><span className="text-blue-600 dark:text-blue-300">useEffect</span>(() =&gt; {"{"}</div>
+            <div className="pl-8"><span className="text-purple-600 dark:text-purple-400">const</span> <span className="text-blue-600 dark:text-blue-300">parseStream</span> = <span className="text-purple-600 dark:text-purple-400">async</span> () =&gt; {"{"}</div>
+            <div className="pl-12"><span className="text-purple-600 dark:text-purple-400">for await</span> (<span className="text-purple-600 dark:text-purple-400">const</span> chunk <span className="text-purple-600 dark:text-purple-400">of</span> stream) {"{"}</div>
+            <div className="pl-16"><span className="text-blue-600 dark:text-blue-300">setOutput</span>((prev) =&gt; prev + chunk);</div>
+            <div className="pl-12">{"}"}</div>
+            <div className="pl-8">{"}"};</div>
+            <div className="pl-8"><span className="text-blue-600 dark:text-blue-300">parseStream</span>();</div>
+            <div className="pl-4">{"}"}, [stream]);</div>
+            <div className="h-5"></div>
+            <div className="pl-4"><span className="text-purple-600 dark:text-purple-400">return</span> (</div>
+            <div className="pl-8">&lt;<span className="text-emerald-600 dark:text-emerald-300">div</span> <span className="text-blue-600 dark:text-blue-300">className</span>=<span className="text-amber-600 dark:text-amber-300">"copilot-window bg-black/50"</span>&gt;</div>
+            <div className="pl-12">{"{"}output || <span className="text-amber-600 dark:text-amber-300">"Awaiting neural link..."</span>{"}"}</div>
+            <div className="pl-8">&lt;/<span className="text-emerald-600 dark:text-emerald-300">div</span>&gt;</div>
+            <div className="pl-4">);</div>
+            <div>{"}"}</div>
+        </>
+        )
+    },
+    'main.rs': {
+        icon: "rust", color: 'text-orange-400',
+        code: (
+            <>
                 <div><span className="text-purple-600 dark:text-purple-400">use</span> axum::{"{"}routing::post, Json, Router{"}"};</div>
                 <div><span className="text-purple-600 dark:text-purple-400">use</span> serde::Deserialize;</div>
                 <div className="h-6"></div>
@@ -38,25 +67,6 @@ const FILES = {
                 <div className="pl-4">{"}"}));</div>
                 <div>{"}"}</div>
                 <div className="h-6"></div>
-            </>
-        )
-    },
-    'main.rs': {
-        icon: "rust", color: 'text-orange-400',
-        code: (
-            <>
-                <div className="text-slate-400 dark:text-slate-500 italic">// Zero-copy SIMD WebSocket stream</div>
-                <div><span className="text-purple-600 dark:text-purple-400">pub async fn</span> <span className="text-blue-600 dark:text-blue-300">lsp_stream</span>(ws: <span className="text-emerald-600 dark:text-emerald-300">WebSocket</span>) {"{"}</div>
-                <div className="pl-4"><span className="text-purple-600 dark:text-purple-400">while let</span> <span className="text-emerald-600 dark:text-emerald-300">Some</span>(msg) = ws.next().<span className="text-purple-600 dark:text-purple-400">await</span> {"{"}</div>
-                <div className="pl-8">tokio::spawn(<span className="text-purple-600 dark:text-purple-400">async move</span> {"{"}</div>
-                <div className="pl-12"><span className="text-purple-600 dark:text-purple-400">unsafe</span> {"{"}</div>
-                <div className="pl-16"><span className="text-purple-600 dark:text-purple-400">let</span> ptr = msg.unwrap().as_ptr() <span className="text-purple-600 dark:text-purple-400">as</span> *<span className="text-purple-600 dark:text-purple-400">const</span> _;</div>
-                <div className="pl-16"><span className="text-purple-600 dark:text-purple-400">let</span> ast = std::arch::x86_64::_mm256_loadu_si256(ptr);</div>
-                <div className="pl-16">ws.send(compile(ast)).<span className="text-purple-600 dark:text-purple-400">await</span>;</div>
-                <div className="pl-12">{"}"}</div>
-                <div className="pl-8">{"}"});</div>
-                <div className="pl-4">{"}"}</div>
-                <div>{"}"}</div>
             </>
         )
     }
