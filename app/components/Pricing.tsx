@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { FaCheck } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -12,6 +13,7 @@ if (typeof window !== "undefined") {
 
 const plans = [
     {
+        id: "hobby",
         name: "Hobby",
         desc: "For tinkerers exploring the editor.",
         price: "$0",
@@ -23,9 +25,11 @@ const plans = [
             "Community support"
         ],
         btnText: "Get started",
-        featured: false
+        featured: false,
+        checkoutUrl: null // Free tier redirects to app
     },
     {
+        id: "pro",
         name: "Pro",
         badge: "Most popular",
         desc: "For engineers shipping daily who need advanced agentic power.",
@@ -40,9 +44,12 @@ const plans = [
             "Full repository semantic indexing"
         ],
         btnText: "Start Pro trial",
-        featured: true
+        featured: true,
+        // Grab this URL from your Lemon Squeezy Dashboard -> Products -> Share button
+        checkoutUrl: process.env.NEXT_PUBLIC_LS_PRO_URL || "https://vextor.lemonsqueezy.com/checkout/buy/YOUR_VARIANT_ID"
     },
     {
+        id: "teams",
         name: "Teams",
         desc: "For organizations that build and ship together.",
         price: "$40",
@@ -54,12 +61,41 @@ const plans = [
             "Usage analytics and audit logs"
         ],
         btnText: "Get Teams",
-        featured: false
+        featured: false,
+        checkoutUrl: process.env.NEXT_PUBLIC_LS_TEAMS_URL || "https://vextor.lemonsqueezy.com/checkout/buy/YOUR_TEAMS_VARIANT_ID"
     }
 ];
 
 export default function Pricing() {
     const sectionRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+    
+    // Replace this with your actual auth state (e.g., Clerk, Supabase, or Context)
+    const currentUserId = "user_123456";
+
+    const isAuthenticated = false;
+    
+
+    // 🚀 Load the Lemon.js script so the checkout overlay works seamlessly
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://assets.lemonsqueezy.com/lemon.js";
+        script.async = true;
+        document.body.appendChild(script);
+
+        // Initialize Lemon.js once loaded
+        script.onload = () => {
+            // @ts-ignore
+            if (window.createLemonSqueezy) {
+                // @ts-ignore
+                window.createLemonSqueezy();
+            }
+        };
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
 
     useGSAP(() => {
         if (!sectionRef.current) return;
@@ -71,29 +107,33 @@ export default function Pricing() {
             }
         });
 
-        tl.from(".pricing-header", {
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out"
-        })
-        .from(".pricing-card", {
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out"
-        }, "-=0.4");
+        tl.from(".pricing-header", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" })
+          .from(".pricing-card", { y: 50, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }, "-=0.4");
 
     }, { scope: sectionRef });
 
+    const handlePlanSelect = (plan: typeof plans[0]) => {
+        // Free / Hobby tier directly goes to download or getting started
+        if (!plan.checkoutUrl) {
+            router.push("/download");
+            return;
+        }
+
+        const targetUrl = `/checkout?plan=${plan.id}`;
+
+        if (!isAuthenticated) {
+            // Redirect to login/signup with return URL
+            router.push(`/login?redirect=${encodeURIComponent(targetUrl)}`);
+        } else {
+            // User is already authenticated -> go to details/confirmation page
+            router.push(targetUrl);
+        }
+    };
+
     return (
         <section ref={sectionRef} id="pricing" className="relative max-w-7xl mx-auto px-6 py-32 isolate">
-            
             <div className="pricing-header text-center mb-20">
-                <h2 className="text-xs font-black text-primary tracking-[0.4em] uppercase mb-4">
-                    Pricing
-                </h2>
+                <h2 className="text-xs font-black text-primary tracking-[0.4em] uppercase mb-4">Pricing</h2>
                 <p className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white tracking-tighter mb-6">
                     Start free. Scale when your workflow demands it.
                 </p>
@@ -142,6 +182,7 @@ export default function Pricing() {
                         </ul>
 
                         <button 
+                            onClick={() => handlePlanSelect(plan)}
                             className={`w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 cursor-pointer
                                 ${plan.featured 
                                     ? "bg-primary hover:opacity-90 text-white shadow-[0_0_20px_var(--color-primary)]" 

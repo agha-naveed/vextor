@@ -34,7 +34,7 @@ function LoginContent() {
 
   const { isLoaded: isAuthLoaded, isSignedIn } = useAuth();
 
-  const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url"));
+  const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url")) || "/dashboard";
 
   const completeAuthRedirect = () => {
     if (redirectUrl.startsWith("vextor://")) {
