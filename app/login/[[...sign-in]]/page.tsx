@@ -335,6 +335,8 @@ function LoginContent() {
                 </>
               )}
 
+
+              <div id="clerk-captcha"></div>
               {pendingVerification && (
                 <div className="overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-top-2">
                   <label className="mb-2 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Verification Code</label>
