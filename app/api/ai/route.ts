@@ -1,162 +1,163 @@
-// VERCEL WEBSITE: app/api/ai/route.ts
 import { NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { sql } from '@/lib/db'; 
 
-// 🚀 FIX 1: Override Vercel's strict 10-second timeout
+// Override Vercel's strict 10-second timeout for long AI generations
 export const maxDuration = 60; 
 
-// A Helper function to pick a cheap/fast model when VIP limits are exceeded
+// Fallback logic for when Pro users exhaust their monthly 50,000 credits
 function getFallbackModel(provider: string) {
+    if (provider === 'cerebras') return 'llama3.1-8b';
     if (provider === 'groq') return 'llama-3.1-8b-instant';
     if (provider === 'openrouter') return 'openai/gpt-4o-mini';
-    if (provider === 'cerebras') return 'llama3.1-8b';
-    return 'gpt-4o-mini';
+    return 'llama3.1-8b';
 }
 
 export async function POST(req: Request) {
   try {
-    // 🚀 NEW: Extract userId so we know who is making the request
     const { userId, provider, model, temperature, tokens, systemInstruction, userPrompt } = await req.json();
 
-    // ==========================================
-    // LAYER 1: INPUT PROTECTION (The Context Limiter)
-    // ==========================================
-    // 50,000 characters is roughly 12,000 tokens. Reject anything larger.
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized: Missing User ID" }, { status: 401 });
+    }
+
+    // Input Protection against massive malicious payloads
     if (typeof userPrompt === 'string' && userPrompt.length > 50000) {
         return NextResponse.json(
-            { error: "Context limit exceeded. Please select fewer files or a smaller code snippet." },
+            { error: "Context limit exceeded. Please select fewer files." },
             { status: 400 }
         );
     }
 
-    // ==========================================
-    // LAYER 2: THE VIP QUOTA TRACKER
-    // ==========================================
-    // NOTE: Replace these placeholder values with your actual Database query 
-    // Example: const user = await db.user.findUnique({ where: { id: userId } });
+    // 1. Fetch user subscription status & credits from Neon DB
     let plan = "hobby";
-    let monthlyRequests = 0;
+    let computeCredits = 0;
     let selectedModel = model;
 
-    if (userId) {
-        const users = await sql`
-            SELECT plan, monthly_ai_requests 
-            FROM users 
-            WHERE id = ${userId} 
-            LIMIT 1
-        `;
-        
-        if (users.length > 0) {
-            plan = users[0].plan;
-            monthlyRequests = users[0].monthly_ai_requests;
+    const users = await sql`
+        SELECT plan, compute_credits 
+        FROM users 
+        WHERE id = ${userId} 
+        LIMIT 1
+    `;
+    
+    if (users.length > 0) {
+        plan = users[0].plan;
+        computeCredits = users[0].compute_credits;
+    }
+
+    const isPayingCustomer = plan === "pro" || plan === "teams";
+
+    // 2. Enforce Credit Limits
+    if (computeCredits <= 0) {
+        if (!isPayingCustomer) {
+            // Free users get blocked completely when they hit 0
+            return NextResponse.json(
+                { error: "Free compute credits exhausted. Please upgrade to Pro in the dashboard to continue." },
+                { status: 402 } // 402 Payment Required
+            );
+        } else {
+            // Paid users get shifted to the unlimited "Slow Lane" free models instead of being blocked
+            selectedModel = getFallbackModel(provider);
         }
     }
 
-    if (plan === "hobby" && monthlyRequests >= 50) {
-        return NextResponse.json(
-            { error: "Free monthly AI limit reached. Please upgrade to Pro." },
-            { status: 429 }
-        );
-    }
-
-    if (plan === "pro" && monthlyRequests >= 500) {
-        selectedModel = getFallbackModel(provider);
-    }
-
-    // Downgrade Pro users who have burned all 500 VIP Fast Passes
-    if (plan === "pro" && monthlyRequests >= 500) {
-        selectedModel = getFallbackModel(provider);
-        console.log(`User ${userId} exceeded VIP limits. Downgraded to ${selectedModel}.`);
-    }
-
     // ==========================================
-    // ROUTING & AUTH CONFIGURATION
+    // 3. ROUTING & SECURE API KEY ASSIGNMENT
     // ==========================================
     let url, apiKey, body;
-
-    // LAYER 3: OUTPUT PROTECTION
-    // Force a hard cap of 4096 tokens so a runaway loop doesn't drain your API credits
     const safeOutputTokens = Math.min(tokens || 4096, 4096); 
 
-    if (provider === 'groq') {
-      url = 'https://api.groq.com/openai/v1/chat/completions';
-      apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3 ?? '';
-      body = {
-        model: selectedModel || 'llama-3.3-70b-versatile',
-        temperature: temperature || 0.3,
-        max_tokens: safeOutputTokens, 
-        messages: [
-          { role: 'system', content: systemInstruction },
-          { role: 'user', content: userPrompt }
-        ]
-      };
-    } else if (provider === 'openrouter') {
-      url = 'https://openrouter.ai/api/v1/chat/completions';
-      apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3 ?? '';
-      body = {
-        model: selectedModel || 'openai/gpt-oss-120b',
-        temperature: temperature || 0.3,
-        max_tokens: safeOutputTokens, 
-        messages: [
-          { role: 'system', content: systemInstruction },
-          { role: 'user', content: userPrompt }
-        ]
-      };
-    }
-    else if (provider === 'cerebras') {
+    if (provider === 'cerebras') {
       url = 'https://api.cerebras.ai/v1/chat/completions';
-      apiKey = process.env.CEREBRAS_API_KEY;
+      
+      // 🚀 THE CEREBRAS MASTER SWITCH
+      // Paying users get the massive Paid Key. Free users get the Free Key.
+      apiKey = isPayingCustomer 
+          ? process.env.PAID_CEREBRAS_KEY 
+          : process.env.FREE_CEREBRAS_KEY;
+
       body = {
         model: selectedModel || 'gpt-oss-120b', 
         temperature: temperature || 0.7,
         max_tokens: safeOutputTokens, 
-        messages: [
-          { role: 'system', content: systemInstruction },
-          { role: 'user', content: userPrompt }
-        ]
+        messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
       };
-    }
-    else {
+
+    } else if (provider === 'groq') {
+      url = 'https://api.groq.com/openai/v1/chat/completions';
+      
+      // 🛡️ Free Use Shield: Groq requests always route through free keys to protect your wallet
+      apiKey = process.env.FREE_GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3;
+      
+      body = {
+        model: selectedModel || 'llama-3.3-70b-versatile',
+        temperature: temperature || 0.3,
+        max_tokens: safeOutputTokens, 
+        messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
+      };
+
+    } else if (provider === 'openrouter') {
+      url = 'https://openrouter.ai/api/v1/chat/completions';
+      
+      // 🛡️ Free Use Shield: OpenRouter requests always route through free keys
+      apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3; 
+      
+      body = {
+        model: selectedModel || 'openai/gpt-oss-120b',
+        temperature: temperature || 0.3,
+        max_tokens: safeOutputTokens, 
+        messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
+      };
+
+    } else {
       return NextResponse.json({ error: `Unsupported provider: ${provider}` }, { status: 400 });
     }
 
-    // ==========================================
-    // EXECUTE THE AI REQUEST
-    // ==========================================
+    if (!apiKey) {
+         throw new Error(`Configuration Error: API key for ${provider} is missing from Vercel.`);
+    }
+
+    // 4. Execute the AI Request securely from the Backend
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'X-Title': 'Vextor AI IDE'
+        'X-Title': 'Vextor AI IDE' // Identifies your app to the AI providers
       },
       body: JSON.stringify(body)
     });
 
-    // 🚀 FIX 2: Catch the EXACT error string from Groq/OpenRouter
     if (!response.ok) {
       const errorText = await response.text(); 
-      console.error(`[${provider.toUpperCase()}] Provider Error:`, errorText);
       throw new Error(`AI Provider Error (${response.status}): ${errorText}`);
     }
 
     const data = await response.json();
 
-    if (userId) {
-        // Increment the count without needing a secondary read query
+    // 5. Deduct Compute Credits (1 credit = 100 tokens)
+    let creditsUsed = 0;
+    
+    if (computeCredits > 0) {
+        const totalTokens = data.usage?.total_tokens || 0;
+        creditsUsed = Math.ceil(totalTokens / 100) || 1;
+
         await sql`
             UPDATE users 
-            SET monthly_ai_requests = monthly_ai_requests + 1,
+            SET compute_credits = GREATEST(compute_credits - ${creditsUsed}, 0),
                 updated_at = now()
             WHERE id = ${userId}
         `;
     }
-
-    if (userId) {
-        console.log(`Incremented usage for ${userId}`);
-    }
     
-    // Send the answer back to Electron
+    // 6. Attach usage stats for the Vextor IDE Frontend UI
+    data.vextor_usage = {
+        creditsUsed: creditsUsed,
+        creditsRemaining: Math.max(computeCredits - creditsUsed, 0),
+        isFallback: computeCredits <= 0
+    };
+
+    // Return the generated code to the user's desktop app
     return NextResponse.json(data, {
         status: 200,
         headers: {
@@ -167,7 +168,7 @@ export async function POST(req: Request) {
     });
 
   } catch (error: any) {
-    console.error("🔥 Vercel AI Route Crash:", error.message);
+    console.error("Vercel AI Route Crash:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

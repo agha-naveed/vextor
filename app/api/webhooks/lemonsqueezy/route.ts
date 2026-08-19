@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         const payload = JSON.parse(text);
         const eventName = payload.meta.event_name;
         
-        // 🚀 This is the user ID we passed in the Frontend URL!
+        // This is the user ID we passed in the Frontend URL
         const userId = payload.meta.custom_data?.user_id;
 
         if (!userId) {
@@ -32,49 +32,62 @@ export async function POST(req: Request) {
             return NextResponse.json({ received: true });
         }
 
-        // 4. Handle Subscription Logic
-        // For a successful new subscription
+        // 4. Handle Subscription Upgrades & Monthly Renewals
         if (eventName === 'subscription_created' || eventName === 'subscription_updated') {
-            // 🚀 Here is where variantId is declared!
-            const variantId = payload.data.attributes.variant_id.toString();
+            const attributes = payload.data.attributes;
+            const variantId = attributes.variant_id.toString();
+            const status = attributes.status; 
 
-            // 🚀 Here is where newPlan is declared!
-            let newPlan = "hobby"; 
+            // Only refill credits and upgrade if the subscription is in good standing
             if (status === "active") {
-                // Compare against your env variables to see which plan they bought
-                if (variantId === process.env.LS_PRO_VARIANT_ID) newPlan = "pro";
-                if (variantId === process.env.LS_TEAMS_VARIANT_ID) newPlan = "teams";
+                let newPlan = "hobby"; 
+                let newCredits = 1000; 
+
+                // Identify which tier they purchased
+                if (variantId === process.env.LS_PRO_VARIANT_ID) {
+                    newPlan = "pro";
+                    newCredits = 50000; 
+                }
+                if (variantId === process.env.LS_TEAMS_VARIANT_ID) {
+                    newPlan = "teams";
+                    newCredits = 500000; 
+                }
+
+                // Execute Database Update
+                await sql`
+                    UPDATE users 
+                    SET plan = ${newPlan}, 
+                        subscription_id = ${payload.data.id},
+                        variant_id = ${variantId},
+                        compute_credits = ${newCredits},
+                        updated_at = now()
+                    WHERE id = ${userId}
+                `;
             }
-            
-            await sql`
-                UPDATE users 
-                SET plan = ${newPlan}, 
-                    subscription_id = ${payload.data.id},
-                    variant_id = ${variantId},
-                    updated_at = now()
-                WHERE id = ${userId}
-            `;
         }
 
-        // For a cancellation
-        if (eventName === 'subscription_cancelled' || eventName === 'subscription_expired') {
+        // 5. Handle True Expirations (Downgrade to Free Tier)
+        // We only trigger this when the paid time is completely over.
+        if (eventName === 'subscription_expired') {
             await sql`
                 UPDATE users 
                 SET plan = 'hobby',
                     subscription_id = NULL,
+                    variant_id = NULL,
+                    compute_credits = 1000, 
                     updated_at = now()
                 WHERE id = ${userId}
             `;
         }
 
         return NextResponse.json({ received: true }, {
-        status: 200,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-        },
-    });
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+            },
+        });
 
     } catch (error: any) {
         console.error("🔥 Lemon Squeezy Webhook Error:", error);
