@@ -72,10 +72,8 @@ export default function Pricing() {
     
     // Replace this with your actual auth state (e.g., Clerk, Supabase, or Context)
     const currentUserId = "user_123456";
-
     const isAuthenticated = false;
     
-
     // 🚀 Load the Lemon.js script so the checkout overlay works seamlessly
     useEffect(() => {
         const script = document.createElement("script");
@@ -113,20 +111,31 @@ export default function Pricing() {
     }, { scope: sectionRef });
 
     const handlePlanSelect = (plan: typeof plans[0]) => {
-        // Free / Hobby tier directly goes to download or getting started
+        // 1. Free / Hobby tier directly goes to download or getting started
         if (!plan.checkoutUrl) {
             router.push("/download");
             return;
         }
 
-        const targetUrl = `/checkout?plan=${plan.id}`;
-
+        // 2. Block unauthenticated users
         if (!isAuthenticated) {
-            // Redirect to login/signup with return URL
-            router.push(`/login?redirect=${encodeURIComponent(targetUrl)}`);
+            // Redirect to login. Once logged in, return them to the pricing page.
+            router.push(`/login?redirect=/pricing`);
+            return;
+        }
+
+        // 3. Attach the secure user ID for your Vercel Webhook!
+        // We append ?checkout[custom][user_id]=... to the base Lemon Squeezy link
+        const checkoutUrlWithUserId = `${plan.checkoutUrl}?checkout[custom][user_id]=${currentUserId}`;
+
+        // 4. Trigger the sleek Lemon.js Overlay instead of leaving the page
+        // @ts-ignore
+        if (window.LemonSqueezy) {
+            // @ts-ignore
+            window.LemonSqueezy.Url.Open(checkoutUrlWithUserId); 
         } else {
-            // User is already authenticated -> go to details/confirmation page
-            router.push(targetUrl);
+            // Fallback redirect just in case the script was blocked by an adblocker
+            window.location.href = checkoutUrlWithUserId;
         }
     };
 
