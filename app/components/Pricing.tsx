@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { FaCheck } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import { useUser } from '@clerk/nextjs';
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -70,9 +71,10 @@ export default function Pricing() {
     const sectionRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     
-    // Replace this with your actual auth state (e.g., Clerk, Supabase, or Context)
-    const currentUserId = "user_123456";
-    const isAuthenticated = false;
+    const { user, isSignedIn } = useUser();
+    
+    const currentUserId = user?.id;
+    const isAuthenticated = isSignedIn;
     
     // 🚀 Load the Lemon.js script so the checkout overlay works seamlessly
     useEffect(() => {

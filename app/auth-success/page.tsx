@@ -32,9 +32,14 @@ export default async function AuthSuccessPage({ searchParams }: { searchParams: 
     }
 
     // 🚀 THE MAGIC HANDOFF: 
-    // If they came from /login?redirect=/pricing, send them to /pricing!
-    // Otherwise, default to /dashboard.
     const finalDestination = searchParams.origin || '/dashboard';
     
-    redirect(finalDestination); 
+    // Check if the destination is trying to open the desktop app
+    if (finalDestination.startsWith('vextor://')) {
+        // Intercept it: Send them to the dashboard and pass the deep link in the URL
+        redirect(`/dashboard?app_link=${encodeURIComponent(finalDestination)}`);
+    } else {
+        // Otherwise, send them to their normal web destination (like /pricing or /dashboard)
+        redirect(finalDestination); 
+    }
 }
