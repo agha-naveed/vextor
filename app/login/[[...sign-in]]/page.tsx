@@ -34,13 +34,16 @@ function LoginContent() {
 
   const { isLoaded: isAuthLoaded, isSignedIn } = useAuth();
 
-  const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url")) || "/dashboard";
+  // const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url")) || "/dashboard";
+  const rawRedirect = searchParams.get("redirect") || searchParams.get("redirect_url");
+  const redirectUrl = getSafeRedirectUrl(rawRedirect) || "/dashboard";
 
   const completeAuthRedirect = () => {
     if (redirectUrl.startsWith("vextor://")) {
       window.location.href = redirectUrl;
     } else {
-      router.push(redirectUrl);
+      // 🚀 Pass the final destination to the DB sync page!
+      router.push(`/auth-success?origin=${encodeURIComponent(redirectUrl)}`);
     }
   };
 
@@ -270,7 +273,7 @@ function LoginContent() {
                 <>
                   <button
                     type="button"
-                    onClick={() => signIn && signIn.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: "/auth-success" })}
+                    onClick={() => signIn && signIn.authenticateWithRedirect({ strategy: "oauth_google", redirectUrl: "/sso-callback", redirectUrlComplete: `/auth-success?origin=${encodeURIComponent(redirectUrl)}` })}
                     className="flex h-12 cursor-pointer w-full items-center justify-center gap-3 rounded-xl border border-neutral-200 dark:border-white/10 bg-neutral-50 hover:bg-neutral-100 dark:bg-white/5 dark:hover:bg-white/10 text-sm font-medium text-neutral-900 dark:text-white transition-all duration-200"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 48 48">
