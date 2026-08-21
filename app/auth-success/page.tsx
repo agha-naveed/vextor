@@ -19,6 +19,8 @@ export default async function AuthSuccessPage({ searchParams }: { searchParams: 
     
     const userId = user.id;
     const email = user.emailAddresses[0]?.emailAddress || '';
+
+    const name = user.firstName || 'Developer';
     
     try {
         // Sync to Neon Database
@@ -37,7 +39,11 @@ export default async function AuthSuccessPage({ searchParams }: { searchParams: 
     // Check if the destination is trying to open the desktop app
     if (finalDestination.startsWith('vextor://')) {
         // Intercept it: Send them to the dashboard and pass the deep link in the URL
-        redirect(`/dashboard?app_link=${encodeURIComponent(finalDestination)}`);
+        const finalDeepLink = `${finalDestination}?userId=${userId}&name=${encodeURIComponent(name)}`;
+        
+        redirect(`/dashboard?app_link=${encodeURIComponent(finalDeepLink)}`);
+
+
     } else {
         // Otherwise, send them to their normal web destination (like /pricing or /dashboard)
         redirect(finalDestination); 
