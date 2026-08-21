@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { sql } from '@/lib/db'; 
 import Link from 'next/link';
 import IdeAlert from './IdeAlert';
+import ManageBillingButton from './ManageBillingButton';
 
 export default async function DashboardPage({ searchParams }: { searchParams: { app_link?: string } }) {
     // 1. Authenticate with Clerk
@@ -84,9 +85,8 @@ const user = {
                                     </button>
                                 </Link>
                             ) : (
-                                <button className="w-full py-3 rounded-xl bg-neutral-100 dark:bg-white/5 text-neutral-900 dark:text-white font-bold text-sm border border-transparent dark:border-white/10 hover:bg-neutral-200 dark:hover:bg-white/10 transition-all">
-                                    Manage Billing
-                                </button>
+                                // 🚀 Drop the fully functional client component here!
+                                <ManageBillingButton />
                             )}
                         </div>
                     </div>
