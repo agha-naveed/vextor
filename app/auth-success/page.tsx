@@ -1,7 +1,6 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { sql } from '@/lib/db'; 
-import RedirectHandler from './RedirectHandler';
 
 // 🚀 Add searchParams to the page component
 export default async function AuthSuccessPage({ searchParams }: { searchParams: { origin?: string } }) {
@@ -41,13 +40,12 @@ export default async function AuthSuccessPage({ searchParams }: { searchParams: 
     if (finalDestination.startsWith('vextor://')) {
         // Intercept it: Send them to the dashboard and pass the deep link in the URL
         const finalDeepLink = `${finalDestination}?userId=${userId}&name=${encodeURIComponent(name)}`;
-        <RedirectHandler userId={userId} firstName={name} />
-        // redirect(`/dashboard?app_link=${encodeURIComponent(finalDeepLink)}`);
         
-        
+        redirect(`/dashboard?app_link=${encodeURIComponent(finalDeepLink)}`);
+
+
     } else {
         // Otherwise, send them to their normal web destination (like /pricing or /dashboard)
-        <RedirectHandler userId={userId} firstName={name} />
-        // redirect(finalDestination); 
+        redirect(finalDestination); 
     }
 }

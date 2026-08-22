@@ -43,7 +43,7 @@ function LoginContent() {
       window.location.href = redirectUrl;
     } else {
       // 🚀 Pass the final destination to the DB sync page!
-      // router.push(`/auth-success?origin=${encodeURIComponent(redirectUrl)}`);
+      router.push(`/auth-success?origin=${encodeURIComponent(redirectUrl)}`);
     }
   };
 
