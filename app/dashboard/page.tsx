@@ -4,6 +4,7 @@ import { sql } from '@/lib/db';
 import Link from 'next/link';
 import IdeAlert from './IdeAlert';
 import ManageBillingButton from './ManageBillingButton';
+import SilentLauncher from './SilentLauncher';
 
 export default async function DashboardPage({ searchParams }: { searchParams: { app_link?: string } }) {
     // 1. Authenticate with Clerk
@@ -50,6 +51,7 @@ const user = {
 
     return (
         <main className="min-h-screen bg-neutral-50 dark:bg-[#06070a] p-6 sm:p-12 font-sans">
+            <SilentLauncher appLink={searchParams.app_link} />
             <div className="max-w-4xl mx-auto">
 
                 {searchParams.app_link && (
