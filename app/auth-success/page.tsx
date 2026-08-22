@@ -43,10 +43,11 @@ export default async function AuthSuccessPage({ searchParams }: { searchParams: 
         const finalDeepLink = `${finalDestination}?userId=${userId}&name=${encodeURIComponent(name)}`;
         <RedirectHandler userId={userId} firstName={name} />
         // redirect(`/dashboard?app_link=${encodeURIComponent(finalDeepLink)}`);
-
-
+        
+        
     } else {
         // Otherwise, send them to their normal web destination (like /pricing or /dashboard)
-        redirect(finalDestination); 
+        <RedirectHandler userId={userId} firstName={name} />
+        // redirect(finalDestination); 
     }
 }
