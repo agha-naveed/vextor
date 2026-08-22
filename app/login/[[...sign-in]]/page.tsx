@@ -39,12 +39,12 @@ function LoginContent() {
   const redirectUrl = getSafeRedirectUrl(rawRedirect) || "/dashboard";
 
   const completeAuthRedirect = () => {
-    if (redirectUrl.startsWith("vextor://")) {
-      window.location.href = redirectUrl;
-    } else {
+    // if (redirectUrl.startsWith("vextor://")) {
+    //   window.location.href = redirectUrl;
+    // } else {
       // 🚀 Pass the final destination to the DB sync page!
       router.push(`/auth-success?origin=${encodeURIComponent(redirectUrl)}`);
-    }
+    // }
   };
 
   useEffect(() => {
