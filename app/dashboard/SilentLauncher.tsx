@@ -6,14 +6,25 @@ export default function SilentLauncher({ appLink }: { appLink?: string }) {
     
     useEffect(() => {
         if (appLink) {
-            // 1. Silently fire the deep link to wake up Electron
-            window.location.href = appLink;
-            
-            // 2. Instantly remove "?app_link=..." from the browser URL bar to keep it clean!
+            // 1. Create an invisible iframe to force the OS to open Electron
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = appLink;
+            document.body.appendChild(iframe);
+
+            // 2. Clean the URL bar so the dashboard looks normal
             window.history.replaceState(null, '', '/dashboard');
+
+            // 3. Clean up the iframe code after 2 seconds
+            const cleanup = setTimeout(() => {
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }, 2000);
+
+            return () => clearTimeout(cleanup);
         }
     }, [appLink]);
 
-    // 🚀 Returns null so it is completely invisible on your dashboard
     return null; 
 }
