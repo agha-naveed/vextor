@@ -85,38 +85,41 @@ export async function POST(req: Request) {
         max_tokens: safeOutputTokens, 
         messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
       };
-
     } 
-    if (provider === 'groq') {
-      url = 'https://api.groq.com/openai/v1/chat/completions';
-      
-      // 🛡️ Free Use Shield: Groq requests always route through free keys to protect your wallet
-      apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3;
-      
-      body = {
-        // model: selectedModel || 'llama-3.3-70b-versatile',
-        model: "groq/compound",
-        temperature: temperature || 0.3,
-        max_tokens: safeOutputTokens, 
-        messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
-      };
 
-    }
-     else if (provider === 'openrouter') {
-      url = 'https://openrouter.ai/api/v1/chat/completions';
-      
-      // 🛡️ Free Use Shield: OpenRouter requests always route through free keys
-      apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3; 
-      
-      body = {
-        model: selectedModel || 'openai/gpt-oss-120b',
-        temperature: temperature || 0.3,
-        max_tokens: safeOutputTokens, 
-        messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
-      };
+    else {
+        if (provider === 'groq') {
+        url = 'https://api.groq.com/openai/v1/chat/completions';
+        
+        // 🛡️ Free Use Shield: Groq requests always route through free keys to protect your wallet
+        apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3;
+        
+        body = {
+          // model: selectedModel || 'llama-3.3-70b-versatile',
+          model: "groq/compound",
+          temperature: temperature || 0.3,
+          max_tokens: safeOutputTokens, 
+          messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
+        };
 
-    } else {
-      return NextResponse.json({ error: `Unsupported provider: ${provider}` }, { status: 400 });
+      }
+      else if (provider === 'openrouter') {
+        url = 'https://openrouter.ai/api/v1/chat/completions';
+        
+        apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3; 
+        
+        body = {
+          model: selectedModel || 'openai/gpt-oss-120b',
+          temperature: temperature || 0.3,
+          max_tokens: safeOutputTokens, 
+          messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
+        };
+
+      }
+
+      else {
+        return NextResponse.json({ error: `Unsupported provider: ${provider}` }, { status: 400 });
+      }
     }
 
     if (!apiKey) {
