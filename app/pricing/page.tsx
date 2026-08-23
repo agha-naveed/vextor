@@ -9,32 +9,27 @@ export default function PricingPage() {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-  const handleUpgrade = async (planId: string) => {
-    // 1. If not logged in, send them to login!
+  const handleUpgrade = (planType: "pro" | "teams") => {
+    // 1. If not logged in, redirect them to login first
     if (isLoaded && !user) {
       router.push(`/login?redirect_url=/pricing`);
       return;
     }
 
-    setLoadingPlan(planId);
+    if (user) {
+      // 2. Select the base URL you provided
+      const baseUrl = planType === "pro" 
+        ? process.env.NEXT_PUBLIC_LS_PRO_URL 
+        : process.env.NEXT_PUBLIC_LS_TEAMS_URL;
 
-    try {
-      // 2. Call your Next.js backend to generate a checkout link
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId }),
-      });
+      // 3. Append the Vextor User ID and Plan to the URL so the webhook can read it later!
+      // Lemon Squeezy reads anything in checkout[custom][...] and passes it to your webhook
+      const checkoutUrl = new URL(baseUrl!);
+      checkoutUrl.searchParams.append("checkout[custom][user_id]", user.id);
+      checkoutUrl.searchParams.append("checkout[custom][plan]", planType);
 
-      const data = await res.json();
-
-      // 3. Send the user to the secure payment page!
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error("Checkout failed:", error);
-      setLoadingPlan(null);
+      // 4. Send them straight to the Lemon Squeezy checkout page!
+      window.location.href = checkoutUrl.toString();
     }
   };
 
@@ -213,6 +208,7 @@ export default function PricingPage() {
 
             <div className="mt-12">
               <button
+                onClick={() => handleUpgrade("teams")}
                 className="w-full py-2.5 px-4 rounded-md border border-neutral-800 bg-neutral-900/60 hover:bg-neutral-850 hover:border-neutral-700 text-xs font-medium text-neutral-300 transition cursor-pointer"
               >
                 Get Teams
