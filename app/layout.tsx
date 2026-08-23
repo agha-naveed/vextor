@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fira_Code, Open_Sans, Roboto_Condensed } from "next/font/google";
+import { Open_Sans, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/theme-provider";
 import Navbar from "./components/Navbar";
@@ -7,6 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import AnimatedBackground from "./components/AnimatedBackground";
 import CustomCursor from "./components/CustomCursor";
 import SmoothScrollLayout from "./components/SmoothScrollLayout";
+import ScrollToTop from "./components/ScrollToTop";
 
 const openSans = Open_Sans({
   variable: "--font-openSans",
@@ -87,6 +88,7 @@ export default function RootLayout({
         >
           <Providers>
             <SmoothScrollLayout>
+              <ScrollToTop />
               <CustomCursor />
               <Navbar />
               <AnimatedBackground />

@@ -1,153 +1,234 @@
+"use client"
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { FiCheck, FiCpu, FiZap, FiShield, FiUsers, FiLayers } from "react-icons/fi";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function PricingPage() {
-    return (
-        <main className="min-h-screen bg-[#06070a] text-white relative overflow-hidden">
-            {/* Background Glow Effects */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none -z-10" />
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none -z-10" style={{ backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`, backgroundSize: "40px 40px", color: "inherit" }} />
+    const { user, isLoaded } = useUser();
+  const router = useRouter();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-            <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32">
-                
-                {/* Header Section */}
-                <div className="text-center max-w-3xl mx-auto mb-20">
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-                        Scale your workflow with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Vextor AI</span>
-                    </h1>
-                    <p className="text-lg text-neutral-400">
-                        Whether you are hacking on the weekend or building enterprise software, we have a plan for you.
-                    </p>
+  const handleUpgrade = async (planId: string) => {
+    // 1. If not logged in, send them to login!
+    if (isLoaded && !user) {
+      router.push(`/login?redirect_url=/pricing`);
+      return;
+    }
+
+    setLoadingPlan(planId);
+
+    try {
+      // 2. Call your Next.js backend to generate a checkout link
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planId }),
+      });
+
+      const data = await res.json();
+
+      // 3. Send the user to the secure payment page!
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      setLoadingPlan(null);
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-black text-neutral-200 antialiased selection:bg-neutral-800 selection:text-white pb-28">
+      {/* Subtle structural grid line on top */}
+      <div className="w-full border-b border-neutral-900" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20">
+        
+        {/* Header */}
+        <div className="mb-16">
+          <span className="font-mono text-xs uppercase tracking-widest text-neutral-500">
+            // Plans & Compute
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mt-2">
+            Predictable pricing for developers.
+          </h1>
+          <p className="text-neutral-400 text-sm mt-2 max-w-lg">
+            Choose how you want to build. Upgrade, downgrade, or cancel anytime.
+          </p>
+        </div>
+
+        {/* Unified Bounded Container */}
+        <div className="rounded-xl border border-neutral-800 bg-[#0a0a0a] overflow-hidden grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-neutral-800">
+          
+          {/* 1. Hobby */}
+          <div className="p-8 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-lg text-white">Hobby</h2>
+                <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 border border-neutral-800 px-2 py-0.5 rounded">
+                  Free
+                </span>
+              </div>
+              <p className="text-xs text-neutral-400 mt-2 min-h-[32px]">
+                For tinkerers exploring the editor.
+              </p>
+
+              <div className="mt-8 pb-8 border-b border-neutral-900">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-mono font-medium text-white">$0</span>
                 </div>
+                <p className="font-mono text-xs text-neutral-500 mt-1">forever</p>
+              </div>
 
-                {/* Pricing Cards (3 Columns) */}
-                <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
-                    
-                    {/* 1. Hobby Plan */}
-                    <div className="rounded-3xl border border-white/10 bg-[#111]/50 backdrop-blur-xl p-8 flex flex-col transition hover:border-white/20">
-                        <div className="mb-6">
-                            <h2 className="text-2xl font-bold text-white mb-2">Hobby</h2>
-                            <p className="text-neutral-400 text-sm">Perfect for weekend projects and testing the waters.</p>
-                        </div>
-                        <div className="mb-8 flex items-baseline gap-2">
-                            <span className="text-4xl font-extrabold text-white">Free</span>
-                        </div>
-                        
-                        <ul className="space-y-4 mb-8 flex-1">
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiCheck className="text-neutral-500 shrink-0" />
-                                <span>1,000 Compute Credits / month</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiCheck className="text-neutral-500 shrink-0" />
-                                <span>Standard AI Models</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiCheck className="text-neutral-500 shrink-0" />
-                                <span>Basic Code Autocomplete</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiCheck className="text-neutral-500 shrink-0" />
-                                <span>Community Support</span>
-                            </li>
-                        </ul>
-
-                        <Link 
-                            href="/dashboard"
-                            className="w-full py-3 px-6 rounded-xl font-bold text-center border border-white/10 hover:bg-white/5 transition block"
-                        >
-                            Current Plan
-                        </Link>
-                    </div>
-
-                    {/* 2. Pro Plan (Highlighted in the middle) */}
-                    <div className="rounded-3xl border border-blue-500/50 bg-blue-900/10 backdrop-blur-xl p-8 flex flex-col relative transform lg:-translate-y-4 shadow-2xl shadow-blue-900/20">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-cyan-500 text-black text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
-                            Most Popular
-                        </div>
-
-                        <div className="mb-6">
-                            <h2 className="text-2xl font-bold text-white mb-2">Pro Developer</h2>
-                            <p className="text-blue-200/70 text-sm">For professionals who need maximum power and speed.</p>
-                        </div>
-                        <div className="mb-8 flex items-baseline gap-2">
-                            <span className="text-4xl font-extrabold text-white">$15</span>
-                            <span className="text-neutral-400">/ month</span>
-                        </div>
-                        
-                        <ul className="space-y-4 mb-8 flex-1">
-                            <li className="flex items-center gap-3 text-white font-medium">
-                                <FiZap className="text-blue-400 shrink-0" />
-                                <span>10,000 Compute Credits / month</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-white">
-                                <FiCpu className="text-blue-400 shrink-0" />
-                                <span>Premium Models (GPT-4o, Claude 3.5)</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-white">
-                                <FiLayers className="text-blue-400 shrink-0" />
-                                <span>Advanced Codebase Indexing</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-white">
-                                <FiShield className="text-blue-400 shrink-0" />
-                                <span>Priority Support</span>
-                            </li>
-                        </ul>
-
-                        <button 
-                            className="w-full py-3 px-6 rounded-xl font-bold text-center bg-blue-600 hover:bg-blue-500 text-white transition shadow-lg shadow-blue-600/20 cursor-pointer"
-                        >
-                            Upgrade to Pro
-                        </button>
-                    </div>
-
-                    {/* 3. Team Plan */}
-                    <div className="rounded-3xl border border-white/10 bg-[#111]/50 backdrop-blur-xl p-8 flex flex-col transition hover:border-white/20">
-                        <div className="mb-6">
-                            <h2 className="text-2xl font-bold text-white mb-2">Team</h2>
-                            <p className="text-neutral-400 text-sm">For startups and agencies collaborating on codebases.</p>
-                        </div>
-                        <div className="mb-8 flex items-baseline gap-2">
-                            <span className="text-4xl font-extrabold text-white">$39</span>
-                            <span className="text-neutral-400">/ user / month</span>
-                        </div>
-                        
-                        <ul className="space-y-4 mb-8 flex-1">
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiUsers className="text-neutral-400 shrink-0" />
-                                <span>Shared Team Workspaces</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiZap className="text-neutral-400 shrink-0" />
-                                <span>Pooled Compute Credits</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiLayers className="text-neutral-400 shrink-0" />
-                                <span>Centralized Billing & Admin</span>
-                            </li>
-                            <li className="flex items-center gap-3 text-neutral-300">
-                                <FiShield className="text-neutral-400 shrink-0" />
-                                <span>Dedicated Account Manager</span>
-                            </li>
-                        </ul>
-
-                        <button 
-                            className="w-full py-3 px-6 rounded-xl font-bold text-center border border-white/20 bg-white/5 hover:bg-white/10 transition cursor-pointer"
-                        >
-                            Start Team Trial
-                        </button>
-                    </div>
-
-                </div>
-
-                {/* Footer / Trust Section */}
-                <div className="mt-24 text-center">
-                    <p className="text-neutral-500 text-sm">
-                        Payments processed securely. You can cancel your subscription at any time.
-                    </p>
-                </div>
-
+              <div className="mt-8 space-y-3">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+                  Included capabilities
+                </p>
+                <ul className="space-y-2.5 text-xs text-neutral-300">
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-neutral-600 select-none">—</span>
+                    <span>Core editor & local autocomplete</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-neutral-600 select-none">—</span>
+                    <span>Powered by free API keys (subject to rate limits)</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-neutral-600 select-none">—</span>
+                    <span>Single-file edits</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-neutral-600 select-none">—</span>
+                    <span>Community support</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-        </main>
-    );
+
+            <div className="mt-12">
+              <Link
+                href="/dashboard"
+                className="w-full block text-center py-2.5 px-4 rounded-md border border-neutral-800 bg-neutral-900/60 hover:bg-neutral-850 hover:border-neutral-700 text-xs font-medium text-neutral-300 transition"
+              >
+                Get started
+              </Link>
+            </div>
+          </div>
+
+          {/* 2. Pro */}
+          <div className="p-8 flex flex-col justify-between bg-[#0e0e0e] relative">
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-lg text-white">Pro</h2>
+                <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-300 bg-white/10 px-2 py-0.5 rounded">
+                  Most popular
+                </span>
+              </div>
+              <p className="text-xs text-neutral-400 mt-2 min-h-[32px]">
+                For engineers shipping daily who need advanced agentic power.
+              </p>
+
+              <div className="mt-8 pb-8 border-b border-neutral-800">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-mono font-medium text-white">$20</span>
+                  <span className="font-mono text-xs text-neutral-400">/mo</span>
+                </div>
+                <p className="font-mono text-xs text-neutral-500 mt-1">billed monthly</p>
+              </div>
+
+              <div className="mt-8 space-y-3">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-neutral-400">
+                  Everything in Hobby, plus
+                </p>
+                <ul className="space-y-2.5 text-xs text-neutral-200">
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-white select-none">+</span>
+                    <span>Extended request limits with zero throttling</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-white select-none">+</span>
+                    <span>Access to well-trained, high-performance AI models</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-white select-none">+</span>
+                    <span>Multi-file auto-handling & smart refactoring</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-white select-none">+</span>
+                    <span>Full repository semantic indexing</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-12">
+              <button
+                onClick={() => handleUpgrade("pro")}
+                disabled={loadingPlan === "pro"}
+                className="w-full py-2.5 px-4 rounded-md bg-white hover:bg-neutral-200 text-black text-xs font-semibold tracking-tight transition cursor-pointer disabled:opacity-50"
+              >
+                {loadingPlan === "pro" ? "Loading..." : "Start Pro trial"}
+              </button>
+            </div>
+          </div>
+
+          {/* 3. Teams */}
+          <div className="p-8 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-lg text-white">Teams</h2>
+                <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 border border-neutral-800 px-2 py-0.5 rounded">
+                  Scale
+                </span>
+              </div>
+              <p className="text-xs text-neutral-400 mt-2 min-h-[32px]">
+                For organizations that build and ship together.
+              </p>
+
+              <div className="mt-8 pb-8 border-b border-neutral-900">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-mono font-medium text-white">$40</span>
+                  <span className="font-mono text-xs text-neutral-400">/user/mo</span>
+                </div>
+                <p className="font-mono text-xs text-neutral-500 mt-1">billed annually</p>
+              </div>
+
+              <div className="mt-8 space-y-3">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+                  Everything in Pro, plus
+                </p>
+                <ul className="space-y-2.5 text-xs text-neutral-300">
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-neutral-500 select-none">+</span>
+                    <span>Centralized team billing and administration</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-neutral-500 select-none">+</span>
+                    <span>Usage analytics and audit logs</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-12">
+              <button
+                className="w-full py-2.5 px-4 rounded-md border border-neutral-800 bg-neutral-900/60 hover:bg-neutral-850 hover:border-neutral-700 text-xs font-medium text-neutral-300 transition cursor-pointer"
+              >
+                Get Teams
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Minimalist Footer Note */}
+        <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-neutral-500 font-mono gap-4">
+          <p>Local offline models remain unrestricted on all tiers.</p>
+          <p>Need custom infrastructure? <span className="text-neutral-300 underline cursor-pointer">Contact sales</span></p>
+        </div>
+
+      </div>
+    </main>
+  );
 }
