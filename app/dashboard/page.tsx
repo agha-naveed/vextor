@@ -5,6 +5,7 @@ import Link from 'next/link';
 import IdeAlert from './IdeAlert';
 import ManageBillingButton from './ManageBillingButton';
 import SilentLauncher from './SilentLauncher';
+import ConnectIDEButton from '../components/ConnectIDEButton';
 
 export default async function DashboardPage({ searchParams }: { searchParams: { app_link?: string } }) {
     // 1. Authenticate with Clerk
@@ -67,6 +68,8 @@ const user = {
                         Manage your Vextor AI IDE settings and compute limits.
                     </p>
                 </div>
+
+                <ConnectIDEButton appLink={searchParams.app_link} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
