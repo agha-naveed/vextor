@@ -45,8 +45,8 @@ export async function POST(req: Request) {
     `;
     
     if (users.length > 0) {
-        plan = users[0].plan;
-        computeCredits = users[0].computeCredits;
+        plan = users[0].plan || "hobby";
+        computeCredits = users[0].computeCredits ?? 1000;
     }
 
     const isPayingCustomer = plan === "pro" || plan === "teams";
@@ -70,6 +70,7 @@ export async function POST(req: Request) {
     // ==========================================
     let url, apiKey, body;
     const safeOutputTokens = Math.min(tokens || 4096, 4096); 
+    
 
     if (isPayingCustomer) {
       url = 'https://api.cerebras.ai/v1/chat/completions';
@@ -114,7 +115,6 @@ export async function POST(req: Request) {
           max_tokens: safeOutputTokens, 
           messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
         };
-
       }
 
       else {
@@ -153,7 +153,6 @@ export async function POST(req: Request) {
 
     // 5. Deduct Compute Credits (1 credit = 100 tokens)
     let creditsUsed = 0;
-    
     if (computeCredits > 0) {
         const totalTokens = data.usage?.total_tokens || 0;
         creditsUsed = Math.ceil(totalTokens / 100) || 1;
