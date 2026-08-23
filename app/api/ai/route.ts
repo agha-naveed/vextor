@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     // 1. Fetch user subscription status & credits from Neon DB
     let plan = "hobby";
-    let computeCredits = 0;
+    let computeCredits = 1000;
     let selectedModel = model;
 
     const users = await sql`
