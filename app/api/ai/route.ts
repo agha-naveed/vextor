@@ -14,11 +14,15 @@ function getFallbackModel(provider: string) {
 
 export async function POST(req: Request) {
   try {
-    const { userId, provider, model, temperature, tokens, systemInstruction, userPrompt } = await req.json();
+    const frData = await req.json();
 
+    const { userId, provider, model, temperature, tokens, systemInstruction, userPrompt } = frData
+    
+    
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized: Missing User ID" }, { status: 401 });
     }
+    console.log(frData)
 
     // Input Protection against massive malicious payloads
     if (typeof userPrompt === 'string' && userPrompt.length > 50000) {
@@ -34,7 +38,7 @@ export async function POST(req: Request) {
     let selectedModel = model;
 
     const users = await sql`
-        SELECT plan, compute_credits 
+        SELECT plan, "computeCredits" 
         FROM users 
         WHERE id = ${userId} 
         LIMIT 1
@@ -42,7 +46,7 @@ export async function POST(req: Request) {
     
     if (users.length > 0) {
         plan = users[0].plan;
-        computeCredits = users[0].compute_credits;
+        computeCredits = users[0].computeCredits;
     }
 
     const isPayingCustomer = plan === "pro" || plan === "teams";
@@ -67,36 +71,38 @@ export async function POST(req: Request) {
     let url, apiKey, body;
     const safeOutputTokens = Math.min(tokens || 4096, 4096); 
 
-    if (provider === 'cerebras') {
+    if (isPayingCustomer) {
       url = 'https://api.cerebras.ai/v1/chat/completions';
       
       // 🚀 THE CEREBRAS MASTER SWITCH
       // Paying users get the massive Paid Key. Free users get the Free Key.
-      apiKey = isPayingCustomer 
-          ? process.env.PAID_CEREBRAS_KEY 
-          : process.env.CEREBRAS_API_KEY;
+      apiKey = process.env.CEREBRAS_API_KEY;
 
       body = {
-        model: selectedModel || 'gpt-oss-120b', 
+        // model: selectedModel || 'gpt-oss-120b', 
+        model: 'gpt-oss-120b', 
         temperature: temperature || 0.7,
         max_tokens: safeOutputTokens, 
         messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
       };
 
-    } else if (provider === 'groq') {
+    } 
+    if (provider === 'groq') {
       url = 'https://api.groq.com/openai/v1/chat/completions';
       
       // 🛡️ Free Use Shield: Groq requests always route through free keys to protect your wallet
       apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3;
       
       body = {
-        model: selectedModel || 'llama-3.3-70b-versatile',
+        // model: selectedModel || 'llama-3.3-70b-versatile',
+        model: "groq/compound",
         temperature: temperature || 0.3,
         max_tokens: safeOutputTokens, 
         messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
       };
 
-    } else if (provider === 'openrouter') {
+    }
+     else if (provider === 'openrouter') {
       url = 'https://openrouter.ai/api/v1/chat/completions';
       
       // 🛡️ Free Use Shield: OpenRouter requests always route through free keys
@@ -151,7 +157,7 @@ export async function POST(req: Request) {
 
         await sql`
             UPDATE users 
-            SET compute_credits = GREATEST(compute_credits - ${creditsUsed}, 0),
+            SET "computeCredits" = GREATEST("computeCredits" - ${creditsUsed}, 0),
                 updated_at = now()
             WHERE id = ${userId}
         `;

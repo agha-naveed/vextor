@@ -39,7 +39,7 @@ export async function POST(req: Request) {
                     UPDATE users 
                     SET 
                         plan = ${plan}, 
-                        compute_credits = ${computeCredits}, 
+                        "computeCredits" = ${computeCredits}, 
                         updated_at = now()
                     WHERE id = ${userId};
                 `;
