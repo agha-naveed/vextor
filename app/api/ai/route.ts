@@ -87,7 +87,7 @@ export async function POST(req: Request) {
       url = 'https://api.groq.com/openai/v1/chat/completions';
       
       // 🛡️ Free Use Shield: Groq requests always route through free keys to protect your wallet
-      apiKey = process.env.FREE_GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3;
+      apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3;
       
       body = {
         model: selectedModel || 'llama-3.3-70b-versatile',
