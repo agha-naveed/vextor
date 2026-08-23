@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       // Paying users get the massive Paid Key. Free users get the Free Key.
       apiKey = isPayingCustomer 
           ? process.env.PAID_CEREBRAS_KEY 
-          : process.env.FREE_CEREBRAS_KEY;
+          : process.env.CEREBRAS_API_KEY;
 
       body = {
         model: selectedModel || 'gpt-oss-120b', 
@@ -128,6 +128,13 @@ export async function POST(req: Request) {
       body: JSON.stringify(body)
     });
 
+    if (response.status === 402) {
+      const errorData = await response.json();
+      // Throw a specific error flag so the React frontend inside Electron can show an "Upgrade to Pro" modal
+      throw new Error(`INSUFFICIENT_CREDITS:${errorData.error}`);
+    }
+
+
     if (!response.ok) {
       const errorText = await response.text(); 
       throw new Error(`AI Provider Error (${response.status}): ${errorText}`);
@@ -171,4 +178,16 @@ export async function POST(req: Request) {
     console.error("Vercel AI Route Crash:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+}
+
+
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 204,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+    });
 }
