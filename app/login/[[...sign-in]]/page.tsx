@@ -36,13 +36,17 @@ function LoginContent() {
 
   // const redirectUrl = getSafeRedirectUrl(searchParams.get("redirect_url")) || "/dashboard";
   const rawRedirect = searchParams.get("redirect") || searchParams.get("redirect_url");
-  const redirectUrl = getSafeRedirectUrl(rawRedirect) || "/dashboard";
-
+  let redirectUrl = getSafeRedirectUrl(rawRedirect) || "/dashboard";
+  
+  if (rawRedirect && rawRedirect.includes("vextor://")) {
+    redirectUrl = "vextor://auth";
+  }
   const completeAuthRedirect = () => {
     // if (redirectUrl.startsWith("vextor://")) {
     //   window.location.href = redirectUrl;
     // } else {
       // 🚀 Pass the final destination to the DB sync page!
+      
       router.push(`/auth-success?origin=${encodeURIComponent(redirectUrl)}`);
     // }
   };
