@@ -8,7 +8,7 @@ export async function POST(req: Request) {
         // 1. Get the raw text body and the signature header
         const rawBody = await req.text();
         const signature = (await headers()).get("x-signature") as string;
-        const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET!;
+        const secret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET!;
 
         // 2. Verify the signature to ensure it's actually from Lemon Squeezy
         const hmac = crypto.createHmac("sha256", secret);
