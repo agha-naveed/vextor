@@ -101,7 +101,7 @@ export default function IdeMockup() {
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top 70%",
+                    start: "top 50%",
                     end: "center 30%",
                     scrub: 1.1,
                 }
