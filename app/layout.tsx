@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     default: "Vextor | An AI-Powered IDE",
     template: "%s | Vextor AI",
   },
+  verification: {
+    google: "4q3XnFFPqEBtFBFsSNzPLMgsAjkGxAWvK56Jy030V7Y",
+  },
   description: "Code without fear. Understand without limits. Vextor AI is a native polyglot IDE engineered with Rust and Go, featuring a crash-proof Natural Language Terminal and offline-first AI inference.",
   keywords: [
     "AI IDE",
