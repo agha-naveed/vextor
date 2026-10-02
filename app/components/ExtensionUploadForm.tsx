@@ -76,7 +76,7 @@ export default function ExtensionUploadForm() {
             <input
               id="extension-file"
               type="file"
-              accept=".zip,.vsix"
+              accept=".zip, .vsix, application/zip"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               className="sr-only"
             />
