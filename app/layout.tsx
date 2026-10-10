@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Open_Sans, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/theme-provider";
@@ -8,62 +8,65 @@ import AnimatedBackground from "./components/AnimatedBackground";
 import CustomCursor from "./components/CustomCursor";
 import SmoothScrollLayout from "./components/SmoothScrollLayout";
 import ScrollToTop from "./components/ScrollToTop";
+import { SITE } from "@/lib/seo";
 
 const openSans = Open_Sans({
   variable: "--font-openSans",
   subsets: ["latin"],
+  display: "swap",
 });
 const roboto = Roboto_Condensed({
   variable: "--font-roboto",
   subsets: ["latin"],
+  display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F5F9FA" },
+    { media: "(prefers-color-scheme: dark)", color: "#090A0F" },
+  ],
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE.url),
   title: {
-    default: "Vextor | An AI-Powered IDE",
-    template: "%s | Vextor AI",
+    default: "Vextor Code | AI-Powered Native IDE built with Rust & Go",
+    template: "%s | Vextor Code",
   },
+  description: SITE.description,
+  applicationName: SITE.name,
+  keywords: [...SITE.keywords],
+  authors: [{ name: SITE.author.name, url: SITE.author.url }],
+  creator: SITE.author.name,
+  publisher: SITE.name,
+  category: "technology",
+  alternates: { canonical: "/" },
+  manifest: "/manifest.webmanifest",
+  formatDetection: { email: false, address: false, telephone: false },
   verification: {
     google: "4q3XnFFPqEBtFBFsSNzPLMgsAjkGxAWvK56Jy030V7Y",
   },
-  description: "Code without fear. Understand without limits. Vextor AI is a native polyglot IDE engineered with Rust and Go, featuring a crash-proof Natural Language Terminal and offline-first AI inference.",
-  keywords: [
-    "AI IDE",
-    "Polyglot IDE",
-    "Rust AST Parser",
-    "Go PTY Terminal",
-    "Natural Language CLI",
-    "Offline LLM",
-    "Local AI Coding",
-    "GGUF",
-    "Vextor AI",
-    "Developer Tools"
-  ],
-  authors: [{ name: "Syed Naveed Abbas", url: "https://github.com/agha-naveed" }],
-  creator: "Syed Naveed Abbas",
-  publisher: "Vextor AI",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://vextor.vercel.app",
-    title: "Vextor AI | The Native Polyglot IDE",
-    description: "Code without fear. Understand without limits. Experience the first multi-process IDE built for the AI era.",
-    siteName: "Vextor AI",
-    images: [
-      {
-        url: "/og-image.jpg", // Create a 1200x630 image of your IDE mockup and place it in the /public folder
-        width: 1200,
-        height: 630,
-        alt: "Vextor AI Interface Preview",
-      },
-    ],
+    url: SITE.url,
+    siteName: SITE.name,
+    title: "Vextor Code | AI-Powered Native IDE built with Rust & Go",
+    description:
+      "Code without fear. Understand without limits. A native polyglot IDE with a crash-proof natural language terminal and local-first AI.",
+    // Image comes from app/opengraph-image.tsx automatically.
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vextor AI | The Native Polyglot IDE",
-    description: "Experience the first multi-process IDE built with Rust and Go. Features a crash-proof Natural Language Terminal and offline-first AI.",
-    images: ["/og-image.jpg"],
-    creator: "@naveed_kazmi31",
+    site: SITE.twitterHandle,
+    creator: SITE.twitterHandle,
+    title: "Vextor Code | AI-Powered Native IDE built with Rust & Go",
+    description:
+      "A native polyglot IDE with a Rust AST engine, Go terminal host, sandboxed extensions and offline-first AI.",
+    // Image comes from app/twitter-image.tsx automatically.
   },
   robots: {
     index: true,
@@ -78,6 +81,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Runs before first paint: returning visitors never see the loading screen.
+const skipLoaderScript = `document.documentElement.classList.add("js");try{if(sessionStorage.getItem("vextor_visited"))document.documentElement.setAttribute("data-visited","1")}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -86,6 +92,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <script dangerouslySetInnerHTML={{ __html: skipLoaderScript }} />
+        </head>
         <body
           className={`${openSans.variable} ${roboto.variable} selection:bg-primary selection:text-white dark:selection:text-primary dark:selection:bg-white antialiased w-full bg-main`}
         >

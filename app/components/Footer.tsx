@@ -31,25 +31,25 @@ export default function Footer() {
                         <div className="space-y-6">
                             <h4 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-widest transition-colors">Platform</h4>
                             <ul className="space-y-4">
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Features</a></li>
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Integrations</a></li>
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Performance</a></li>
+                                <li><a href="/#features" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Features</a></li>
+                                <li><a href="/#integrations" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Integrations</a></li>
+                                <li><a href="/docs/architecture" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Performance</a></li>
                             </ul>
                         </div>
 
                         <div className="space-y-6">
                             <h4 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-widest transition-colors">Resources</h4>
                             <ul className="space-y-4">
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Documentation</a></li>
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Manifesto</a></li>
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Community</a></li>
+                                <li><a href="/docs" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Documentation</a></li>
+                                <li><a href="/#overview" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Manifesto</a></li>
+                                <li><a href="/#community" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Community</a></li>
                             </ul>
                         </div>
 
                         <div className="space-y-6 col-span-2 sm:col-span-1">
                             <h4 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-widest transition-colors">Architect</h4>
                             <ul className="space-y-4">
-                                <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Syed Naveed Abbas</a></li>
+                                <li><a href="/#about" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Syed Naveed Abbas</a></li>
                                 <li><a href="#" className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Direct Contact</a></li>
                             </ul>
                         </div>

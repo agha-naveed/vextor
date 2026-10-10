@@ -60,3 +60,43 @@ body {
     opacity: 1;
   }
 }
+
+/* ---- Loading screen: never block content ---- */
+html[data-visited] .vextor-preloader {
+  display: none !important;
+}
+
+/* Failsafe: if JS fails or is slow, the overlay disappears on its own after 2.5s. */
+.vextor-preloader {
+  animation: preloader-failsafe 0.01s linear 2.5s forwards;
+}
+
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* Visually hidden but readable by search engines and screen readers */
+.sr-only-seo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* Hero intro elements start hidden (only when JS is running) so they never flash
+   before the loader and typing effect. GSAP reveals them. Without JS they stay visible. */
+.js .gsap-hero-subtext,
+.js .gsap-hero-btn,
+.js .gsap-ide {
+  opacity: 0;
+}

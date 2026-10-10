@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import DocsSidebar from "@/components/DocsSidebar"; // Adjust this path if your components folder is elsewhere!
+
+export const metadata: Metadata = {
+    title: "Documentation",
+    description: "Official Vextor Code documentation: architecture, getting started, CLI, Go PTY terminal and Rust AST parser guides.",
+    alternates: { canonical: "/docs" },
+};
 
 export default function DocsLayout({
     children,

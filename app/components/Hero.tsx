@@ -14,6 +14,7 @@ export default function Hero({ startTyping = false, onTypingComplete }: { startT
         <header className="text-center pt-24 pb-16 px-4 relative z-10">
             <div className="gsap-hero-text">
                 <h1 className="text-3xl md:text-5xl font-roboto! lg:text-6xl dark:text-white text-zinc-900 font-bold mb-6 leading-[62px] justify-items-center">
+                    <span className="sr-only-seo">Vextor Code: The intelligent IDE. Code smarter, faster, together.</span>
                     <TypewriterText
                         text={"THE INTELLIGENT IDE:\nCODE SMARTER, FASTER, TOGETHER."}
                         speed={50}
@@ -74,7 +75,7 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 50, start
     }, [text, speed, start]);
 
     return (
-        <span className="text-3xl md:text-5xl font-roboto! lg:text-6xl dark:text-white text-zinc-900 font-bold mb-6 leading-[62px] justify-items-center">
+        <span aria-hidden="true" className="text-3xl md:text-5xl font-roboto! lg:text-6xl dark:text-white text-zinc-900 font-bold mb-6 leading-[62px] justify-items-center">
             {displayedText.split("\n").map((line, index, array) => (
                 <React.Fragment key={index}>
                     {line}
