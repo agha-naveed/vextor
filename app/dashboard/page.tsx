@@ -22,7 +22,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     const dbResult = await sql`
         SELECT plan, "computeCredits", subscription_id 
         FROM users 
-        WHERE id = ${user.id} 
+        WHERE id = '${user.id}' 
         LIMIT 1
     `;
 
@@ -31,7 +31,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     //     redirect('/auth-success');
     // }
 
-    const userData = dbResult[0];
+    const userData = dbResult.length > 0 ? dbResult[0] : {};
     const plan = userData.plan || 'hobby';
     const credits = Number(userData.computeCredits) || 0;
 
