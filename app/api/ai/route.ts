@@ -22,9 +22,7 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized: Missing User ID" }, { status: 401 });
     }
-    console.log(frData)
 
-    // Input Protection against massive malicious payloads
     if (typeof userPrompt === 'string' && userPrompt.length > 50000) {
         return NextResponse.json(
             { error: "Context limit exceeded. Please select fewer files." },
@@ -32,7 +30,6 @@ export async function POST(req: Request) {
         );
     }
 
-    // 1. Fetch user subscription status & credits from Neon DB
     let plan = "hobby";
     let computeCredits = 1000;
     let selectedModel = model;
@@ -51,23 +48,17 @@ export async function POST(req: Request) {
 
     const isPayingCustomer = plan === "pro" || plan === "teams";
 
-    // 2. Enforce Credit Limits
     if (computeCredits <= 0) {
         if (!isPayingCustomer) {
-            // Free users get blocked completely when they hit 0
             return NextResponse.json(
                 { error: "Free compute credits exhausted. Please upgrade to Pro in the dashboard to continue." },
-                { status: 402 } // 402 Payment Required
+                { status: 402 }
             );
         } else {
-            // Paid users get shifted to the unlimited "Slow Lane" free models instead of being blocked
             selectedModel = getFallbackModel(provider);
         }
     }
 
-    // ==========================================
-    // 3. ROUTING & SECURE API KEY ASSIGNMENT
-    // ==========================================
     let url, apiKey, body;
     const safeOutputTokens = Math.min(tokens || 4096, 4096); 
     
@@ -75,12 +66,9 @@ export async function POST(req: Request) {
     if (isPayingCustomer) {
       url = 'https://api.cerebras.ai/v1/chat/completions';
       
-      // 🚀 THE CEREBRAS MASTER SWITCH
-      // Paying users get the massive Paid Key. Free users get the Free Key.
       apiKey = process.env.CEREBRAS_API_KEY;
 
       body = {
-        // model: selectedModel || 'gpt-oss-120b', 
         model: 'gpt-oss-120b', 
         temperature: temperature || 0.7,
         max_tokens: safeOutputTokens, 
@@ -95,7 +83,6 @@ export async function POST(req: Request) {
         apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3 ?? process.env.GROQ_API_KEY4 ?? process.env.GROQ_API_KEY5;
         
         body = {
-          // model: selectedModel || 'llama-3.3-70b-versatile',
           model: "openai/gpt-oss-120b",
           temperature: temperature || 0.3,
           max_tokens: safeOutputTokens, 
@@ -125,20 +112,18 @@ export async function POST(req: Request) {
          throw new Error(`Configuration Error: API key for ${provider} is missing from Vercel.`);
     }
 
-    // 4. Execute the AI Request securely from the Backend
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'X-Title': 'Vextor AI IDE' // Identifies your app to the AI providers
+        'X-Title': 'Vextor AI IDE'
       },
       body: JSON.stringify(body)
     });
 
     if (response.status === 402) {
       const errorData = await response.json();
-      // Throw a specific error flag so the React frontend inside Electron can show an "Upgrade to Pro" modal
       throw new Error(`INSUFFICIENT_CREDITS:${errorData.error}`);
     }
 
@@ -150,7 +135,6 @@ export async function POST(req: Request) {
 
     const data = await response.json();
 
-    // 5. Deduct Compute Credits (1 credit = 100 tokens)
     let creditsUsed = 0;
     if (computeCredits > 0) {
         const totalTokens = data.usage?.total_tokens || 0;
@@ -164,14 +148,12 @@ export async function POST(req: Request) {
         `;
     }
     
-    // 6. Attach usage stats for the Vextor IDE Frontend UI
     data.vextor_usage = {
         creditsUsed: creditsUsed,
         creditsRemaining: Math.max(computeCredits - creditsUsed, 0),
         isFallback: computeCredits <= 0
     };
 
-    // Return the generated code to the user's desktop app
     return NextResponse.json(data, {
         status: 200,
         headers: {

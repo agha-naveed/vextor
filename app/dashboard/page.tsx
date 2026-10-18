@@ -1,4 +1,4 @@
-// import { currentUser } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { sql } from '@/lib/db'; 
 import Link from 'next/link';
@@ -7,20 +7,20 @@ import ManageBillingButton from './ManageBillingButton';
 import SilentLauncher from './SilentLauncher';
 import ConnectIDEButton from '../components/ConnectIDEButton';
 
+// 🚀 FIX 1: Force Vercel to fetch fresh data every time you load the page
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardPage({ searchParams }: { searchParams: { app_link?: string } }) {
     // 1. Authenticate with Clerk
-    // const user = await currentUser();
+    const user = await currentUser();
     
-    // if (!user) {
-    //     redirect('/login');
-    // }
-const user = {
-    id: "user_3GuczoBOrWMlJ4zzEMp13zlowAr",
-    firstName: "Naveed"
-}
+    if (!user) {
+        redirect('/login');
+    }
     // 2. Fetch the user's credits and plan from your Neon DB
     const dbResult = await sql`
-        SELECT plan, 'compute_credits', subscription_id 
+        SELECT plan, "computeCredits", subscription_id 
         FROM users 
         WHERE id = ${user.id} 
         LIMIT 1
@@ -33,7 +33,7 @@ const user = {
 
     const userData = dbResult[0];
     const plan = userData.plan || 'hobby';
-    const credits = userData.compute_credits || 0;
+    const credits = Number(userData.computeCredits) || 0;
 
     // 3. Calculate max limits for the progress bar
     let maxCredits = 1000;
