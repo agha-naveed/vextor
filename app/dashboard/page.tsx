@@ -28,9 +28,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     `;
 
     // Failsafe: If they somehow bypassed the sync, force them back
-    // if (dbResult.length === 0) {
-    //     redirect('/auth-success');
-    // }
+    if (dbResult.length === 0) {
+        redirect('/auth-success');
+    }
 
     const userData = dbResult.length > 0 ? dbResult[0] : {};
     const plan = userData.plan || 'hobby';
