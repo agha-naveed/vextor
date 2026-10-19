@@ -22,7 +22,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     const dbResult = await sql`
         SELECT plan, "computeCredits", subscription_id 
         FROM users 
-        WHERE id = '${user.id}' 
+        WHERE id = ${user.id} 
         LIMIT 1
     `;
 
