@@ -124,7 +124,7 @@ export async function POST(req: Request) {
 
     if (response.status === 402) {
       const errorData = await response.json();
-      throw new Error(`INSUFFICIENT_CREDITS:${errorData.error}`);
+      throw new Error(`INSUFFICIENT_CREDITS: ${JSON.stringify(errorData.error)}`);
     }
 
 
