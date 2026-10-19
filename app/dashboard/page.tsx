@@ -2,6 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { sql } from '@/lib/db'; 
 import Link from 'next/link';
+import { UserButton } from '@clerk/nextjs';
 import IdeAlert from './IdeAlert';
 import ManageBillingButton from './ManageBillingButton';
 import SilentLauncher from './SilentLauncher';
@@ -60,13 +61,20 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
                 )}
                 
                 {/* Header Section */}
-                <div className="mb-10">
-                    <h1 className="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
-                        Welcome back, {user.firstName || 'Developer'}
-                    </h1>
-                    <p className="text-neutral-500 dark:text-neutral-400 mt-2">
-                        Manage your Vextor AI IDE settings and compute limits.
-                    </p>
+                <div className="mb-10 flex justify-between items-center">
+                    <div>
+                        <h1 className="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                            Welcome back, {user.firstName || 'Developer'}
+                        </h1>
+                        <p className="text-neutral-500 dark:text-neutral-400 mt-2">
+                            Manage your Vextor AI IDE settings and compute limits.
+                        </p>
+                    </div>
+                    
+                    {/* Clerk Profile & Logout Dropdown */}
+                    <div className="scale-125 origin-right">
+                        <UserButton />
+                    </div>
                 </div>
 
                 <ConnectIDEButton appLink={searchParams.app_link} />
