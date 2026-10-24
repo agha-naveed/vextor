@@ -77,7 +77,7 @@ export async function POST(req: Request) {
     } 
 
     else {
-        if (provider === 'groq') {
+        if (provider === 'groq' || provider === "openrouter") {
         url = 'https://api.groq.com/openai/v1/chat/completions';
         
         apiKey = process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY3 ?? process.env.GROQ_API_KEY4 ?? process.env.GROQ_API_KEY5;
@@ -90,18 +90,18 @@ export async function POST(req: Request) {
         };
 
       }
-      else if (provider === 'openrouter') {
-        url = 'https://openrouter.ai/api/v1/chat/completions';
+      // else if (provider === 'openrouter') {
+      //   url = 'https://openrouter.ai/api/v1/chat/completions';
         
-        apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3; 
+      //   apiKey = process.env.API_KEY ?? process.env.API_KEY2 ?? process.env.API_KEY3; 
         
-        body = {
-          model: selectedModel == "qwen/qwen3-235b-a22b-thinking-2507" ? "qwen/qwen3-235b-a22b-thinking-2507" : 'openai/gpt-oss-120b',
-          temperature: temperature || 0.3,
-          max_tokens: safeOutputTokens, 
-          messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
-        };
-      }
+      //   body = {
+      //     model: selectedModel == "qwen/qwen3-235b-a22b-thinking-2507" ? "qwen/qwen3-235b-a22b-thinking-2507" : 'openai/gpt-oss-120b',
+      //     temperature: temperature || 0.3,
+      //     max_tokens: safeOutputTokens, 
+      //     messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
+      //   };
+      // }
 
       else {
         return NextResponse.json({ error: `Unsupported provider: ${provider}` }, { status: 400 });
