@@ -1,51 +1,46 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { sql } from '@/lib/db'; 
+import { sql } from '@/lib/db';
+import { ensureUserRecord } from '@/lib/ensureUser';
+import { isAppDeepLink, isSafeInternalPath } from '@/lib/redirects';
 
-// 🚀 Add searchParams to the page component
-export default async function AuthSuccessPage({ searchParams }: { searchParams: { origin?: string } }) {
+// Landing page after every successful login/signup.
+//  - makes sure the user has a row in Neon
+//  - desktop app logins (origin=vextor://...) go to /dashboard?app_link=..., which hands control back to the IDE
+//  - everything else goes back to where they came from, or /dashboard
+export default async function AuthSuccessPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ origin?: string | string[] }>;
+}) {
+    // Next 16: searchParams is a Promise (reading it synchronously returns undefined)
+    const params = await searchParams;
+    const origin = Array.isArray(params.origin) ? params.origin[0] : params.origin;
+
     let user;
-
     try {
         user = await currentUser();
     } catch (error) {
-        console.error("Clerk API Failed:", error);
+        console.error('Auth Success: could not load Clerk user', error);
         redirect('/login');
     }
 
     if (!user) {
         redirect('/login');
     }
-    
-    const userId = user.id;
-    const email = user.emailAddresses[0]?.emailAddress || '';
 
-    const name = user.firstName || 'Developer';
-    
+    // Create the Neon row if the Clerk webhook has not done it yet (name/email/credits all handled there)
     try {
-        // Sync to Neon Database
-        await sql`
-            INSERT INTO users (id, email, plan, compute_credits, created_at, updated_at)
-            VALUES (${userId}, ${email}, 'hobby', 1000, now(), now())
-            ON CONFLICT (id) DO NOTHING;
-        `;
+        await ensureUserRecord(sql as any);
     } catch (dbError) {
-        console.error("Database Sync Failed:", dbError);
+        console.error('Auth Success: DB sync failed', dbError);
     }
 
-    // 🚀 THE MAGIC HANDOFF: 
-    const finalDestination = searchParams.origin || '/dashboard';
-    
-    // Check if the destination is trying to open the desktop app
-    if (finalDestination.startsWith('vextor://')) {
-        // Intercept it: Send them to the dashboard and pass the deep link in the URL
-        const finalDeepLink = `${finalDestination}?userId=${userId}&name=${encodeURIComponent(name)}`;
-        
-        redirect(`/dashboard?app_link=${encodeURIComponent(finalDeepLink)}`);
-
-
-    } else {
-        // Otherwise, send them to their normal web destination (like /pricing or /dashboard)
-        redirect(finalDestination); 
+    if (isAppDeepLink(origin)) {
+        const separator = origin.includes('?') ? '&' : '?';
+        const deepLink = `${origin}${separator}userId=${encodeURIComponent(user.id)}&name=${encodeURIComponent(user.firstName || 'Developer')}`;
+        redirect(`/dashboard?app_link=${encodeURIComponent(deepLink)}`);
     }
+
+    redirect(isSafeInternalPath(origin) ? origin : '/dashboard');
 }

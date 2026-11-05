@@ -128,7 +128,7 @@ export default function Pricing() {
 
         // 3. Attach the secure user ID for your Vercel Webhook!
         // We append ?checkout[custom][user_id]=... to the base Lemon Squeezy link
-        const checkoutUrlWithUserId = `${plan.checkoutUrl}?checkout[custom][user_id]=${currentUserId}`;
+        const checkoutUrlWithUserId = `${plan.checkoutUrl}?checkout[custom][user_id]=${encodeURIComponent(currentUserId ?? "")}&checkout[custom][plan]=${plan.id}`;
 
         // 4. Trigger the sleek Lemon.js Overlay instead of leaving the page
         // @ts-ignore

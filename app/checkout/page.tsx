@@ -1,7 +1,8 @@
 "use client";
 
 import { Suspense, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { FaCheck, FaShieldHalved } from "react-icons/fa6";
 
 const planDetails: Record<
@@ -33,16 +34,28 @@ const planDetails: Record<
 
 function CheckoutContent() {
     const searchParams = useSearchParams();
+    const router = useRouter();
+    const { user: clerkUser, isLoaded, isSignedIn } = useUser();
 
-    const planKey = searchParams.get("plan") || "pro";
-    const plan = planDetails[planKey] || planDetails.pro;
+    // Only known plans; anything else falls back to Pro
+    const planKey = searchParams.get("plan") === "teams" ? "teams" : "pro";
+    const plan = planDetails[planKey];
 
-    // Replace this with your real authenticated user
-    const user = {
-        id: "user_12345",
-        email: "user@example.com",
-        name: "Developer",
-    };
+    // Signed-out visitors log in first and come straight back to this page
+    useEffect(() => {
+        if (isLoaded && !isSignedIn) {
+            router.replace(`/login?redirect_url=${encodeURIComponent(`/checkout?plan=${planKey}`)}`);
+        }
+    }, [isLoaded, isSignedIn, planKey, router]);
+
+    // Real account data from Clerk (no placeholder user)
+    const user = clerkUser
+        ? {
+              id: clerkUser.id,
+              email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
+              name: clerkUser.fullName || clerkUser.firstName || "Developer",
+          }
+        : null;
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -66,10 +79,14 @@ function CheckoutContent() {
     }, []);
 
     const handleProceedToPayment = () => {
+        if (!user) return;
         const params = new URLSearchParams();
 
-        params.set("custom[user_id]", user.id);
-        params.set("checkout[email]", user.email);
+        // Lemon Squeezy only forwards custom data to the webhook as checkout[custom][...]
+        params.set("checkout[custom][user_id]", user.id);
+        params.set("checkout[custom][plan]", planKey);
+        if (user.email) params.set("checkout[email]", user.email);
+        params.set("checkout[name]", user.name);
 
         const separator = plan.variantUrl.includes("?") ? "&" : "?";
         const finalUrl = `${plan.variantUrl}${separator}${params.toString()}`;
@@ -82,6 +99,14 @@ function CheckoutContent() {
             window.location.href = finalUrl;
         }
     };
+
+    if (!isLoaded || !user) {
+        return (
+            <div className="max-w-3xl mx-auto py-20 px-6">
+                <div className="animate-pulse text-neutral-500">Loading checkout...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-3xl mx-auto py-20 px-6">

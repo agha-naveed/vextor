@@ -7,12 +7,19 @@ import IdeAlert from './IdeAlert';
 import ManageBillingButton from './ManageBillingButton';
 import SilentLauncher from './SilentLauncher';
 import ConnectIDEButton from '../components/ConnectIDEButton';
+import { isAppDeepLink } from '@/lib/redirects';
+import { PLAN_CREDITS } from '@/lib/plans';
 
 // 🚀 FIX 1: Force Vercel to fetch fresh data every time you load the page
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default async function DashboardPage({ searchParams }: { searchParams: { app_link?: string } }) {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ app_link?: string | string[] }> }) {
+    // Next 16: searchParams is a Promise. Only vextor:// deep links are ever passed on.
+    const params = await searchParams;
+    const rawAppLink = Array.isArray(params.app_link) ? params.app_link[0] : params.app_link;
+    const appLink = isAppDeepLink(rawAppLink) ? rawAppLink : undefined;
+
     // 1. Authenticate with Clerk
     const user = await currentUser();
     
@@ -37,14 +44,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     const credits = Number(userData.computeCredits) || 0;
 
     // 3. Calculate max limits for the progress bar
-    let maxCredits = 1000;
+    let maxCredits: number = PLAN_CREDITS.hobby;
     let planName = "Hobby (Free)";
     
     if (plan === 'pro') {
-        maxCredits = 50000;
+        maxCredits = PLAN_CREDITS.pro;
         planName = "Pro";
     } else if (plan === 'teams') {
-        maxCredits = 500000;
+        maxCredits = PLAN_CREDITS.teams;
         planName = "Teams";
     }
 
@@ -53,11 +60,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
     return (
         <main className="min-h-screen bg-neutral-50 dark:bg-[#06070a] p-6 sm:p-12 font-sans">
-            <SilentLauncher appLink={searchParams.app_link} />
+            <SilentLauncher appLink={appLink} />
             <div className="max-w-4xl mx-auto">
 
-                {searchParams.app_link && (
-                    <IdeAlert appLink={searchParams.app_link} />
+                {appLink && (
+                    <IdeAlert appLink={appLink} />
                 )}
                 
                 {/* Header Section */}
@@ -77,7 +84,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
                     </div>
                 </div>
 
-                <ConnectIDEButton appLink={searchParams.app_link} />
+                <ConnectIDEButton appLink={appLink} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     

@@ -25,7 +25,7 @@ export async function GET() {
         const response = await fetch(`https://api.lemonsqueezy.com/v1/customers/${customerId}`, {
             headers: {
                 'Accept': 'application/vnd.api+json',
-                'Authorization': `Bearer ${process.env.LEMON_SQUEEZY_API_KEY}`
+                'Authorization': `Bearer ${process.env.LEMONSQUEEZY_API_KEY}`
             }
         });
 

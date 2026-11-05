@@ -5,6 +5,7 @@ import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { PiEye } from "react-icons/pi";
 import { useAuth } from "@clerk/nextjs";
+import { isAppDeepLink, isSafeInternalPath } from "@/lib/redirects";
 
 type FieldErrors = {
   name?: string;
@@ -19,8 +20,8 @@ const DEFAULT_REDIRECT = "/auth-success";
 
 function getSafeRedirectUrl(raw: string | null): string {
   if (!raw) return DEFAULT_REDIRECT;
-  if (raw.startsWith("vextor://")) return raw;
-  if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
+  if (isAppDeepLink(raw)) return raw;
+  if (isSafeInternalPath(raw)) return raw;
   return DEFAULT_REDIRECT;
 }
 

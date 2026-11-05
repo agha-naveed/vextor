@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+
+const LOGIN_URL = `/login?redirect_url=${encodeURIComponent("/extension-marketplace")}`;
 
 export default function ExtensionUploadForm() {
+  const router = useRouter();
+  const { isLoaded, isSignedIn } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"IDLE" | "SUCCESS" | "ERROR">("IDLE");
@@ -11,6 +17,12 @@ export default function ExtensionUploadForm() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) return;
+
+    // Not signed in: send them to login and bring them back to this page afterwards.
+    if (isLoaded && !isSignedIn) {
+      router.push(LOGIN_URL);
+      return;
+    }
 
     setLoading(true);
     setStatus("IDLE");
@@ -24,6 +36,12 @@ export default function ExtensionUploadForm() {
         method: "POST",
         body: formData,
       });
+
+      // Session expired or never existed: the server is the source of truth.
+      if (response.status === 401) {
+        router.push(LOGIN_URL);
+        return;
+      }
 
       const data = await response.json();
 
