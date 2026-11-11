@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   try {
     // Make sure the users row exists (the Clerk webhook may not have run in a local demo)
-    await ensureUserRecord(sql);
+    await ensureUserRecord(sql as unknown as Parameters<typeof ensureUserRecord>[0]);
 
     if (planId === "hobby") {
       // Demo "cancel": back to the free plan
