@@ -64,12 +64,13 @@ export async function POST(req: Request) {
     
 
     if (isPayingCustomer) {
-      url = 'https://api.cerebras.ai/v1/chat/completions';
+      // url = 'https://api.cerebras.ai/v1/chat/completions';
+      url = 'https://api.groq.com/openai/v1/chat/completions';
       
-      apiKey = process.env.CEREBRAS_API_KEY;
+      apiKey = process.env.GROQ_API_KEY5 ?? process.env.GROQ_API_KEY4 ?? process.env.GROQ_API_KEY3 ?? process.env.GROQ_API_KEY ?? process.env.GROQ_API_KEY2;
 
       body = {
-        model: 'gpt-oss-120b', 
+        model: 'gpt-oss-120b',
         temperature: temperature || 0.7,
         max_tokens: safeOutputTokens, 
         messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }]
