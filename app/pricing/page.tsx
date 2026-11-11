@@ -145,7 +145,7 @@ export default function PricingPage() {
                 <ul className="space-y-2.5 text-xs text-neutral-200">
                   <li className="flex items-start gap-2.5">
                     <span className="text-white select-none">+</span>
-                    <span>Extended request limits with zero throttling</span>
+                    <span>Extended request limits</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="text-white select-none">+</span>

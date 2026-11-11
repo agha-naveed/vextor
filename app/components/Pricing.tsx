@@ -39,7 +39,7 @@ const plans = [
         cycle: "billed monthly",
         features: [
             "Everything in Hobby, plus:",
-            "Extended request limits with zero throttling",
+            "Extended request limits",
             "Access to well-trained, high-performance AI models",
             "Multi-file auto-handling & smart refactoring",
             "Full repository semantic indexing"
