@@ -126,6 +126,12 @@ export default function Pricing() {
             return;
         }
 
+        // Demo mode: skip Lemon Squeezy and use the built-in demo checkout
+        if (process.env.NEXT_PUBLIC_DEMO_BILLING === "true") {
+            router.push(`/checkout?plan=${plan.id}`);
+            return;
+        }
+
         // 3. Attach the secure user ID for your Vercel Webhook!
         // We append ?checkout[custom][user_id]=... to the base Lemon Squeezy link
         const checkoutUrlWithUserId = `${plan.checkoutUrl}?checkout[custom][user_id]=${encodeURIComponent(currentUserId ?? "")}&checkout[custom][plan]=${plan.id}`;

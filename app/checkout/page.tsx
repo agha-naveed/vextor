@@ -4,6 +4,9 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { FaCheck, FaShieldHalved } from "react-icons/fa6";
+import DemoPayment from "./DemoPayment";
+
+const isDemo = process.env.NEXT_PUBLIC_DEMO_BILLING === "true";
 
 const planDetails: Record<
     string,
@@ -58,6 +61,7 @@ function CheckoutContent() {
         : null;
 
     useEffect(() => {
+        if (isDemo) return;
         const script = document.createElement("script");
 
         script.src = "https://assets.lemonsqueezy.com/lemon.js";
@@ -183,19 +187,23 @@ function CheckoutContent() {
                         </ul>
                     </div>
 
+                    {isDemo ? (
+                        <DemoPayment plan={planKey} price={plan.price} />
+                    ) : (
                     <button
                         onClick={handleProceedToPayment}
                         className="mt-8 w-full py-3.5 bg-primary hover:opacity-90 text-white font-bold rounded-xl shadow-[0_0_20px_var(--color-primary)] transition"
                     >
                         Proceed to Payment
                     </button>
+                    )}
                 </div>
             </div>
 
             <div className="flex items-center justify-center gap-2 mt-8 text-xs text-neutral-500">
                 <FaShieldHalved className="w-4 h-4" />
                 <span>
-                    Encrypted 256-bit checkout powered by Lemon Squeezy
+                    {isDemo ? "Demo checkout: no real payment is taken" : "Encrypted 256-bit checkout powered by Lemon Squeezy"}
                 </span>
             </div>
         </div>

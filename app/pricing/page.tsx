@@ -16,6 +16,12 @@ export default function PricingPage() {
       return;
     }
 
+    if (user && process.env.NEXT_PUBLIC_DEMO_BILLING === "true") {
+      // Demo mode: use the built-in demo checkout instead of Lemon Squeezy
+      router.push(`/checkout?plan=${planType}`);
+      return;
+    }
+
     if (user) {
       // 2. Select the base URL you provided
       const baseUrl = planType === "pro" 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { sql } from "@/lib/db";
+import { isDemoBillingServer } from "@/lib/demo";
 
 export async function GET() {
     try {
@@ -8,6 +9,11 @@ export async function GET() {
         
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        // Demo mode: no Lemon Squeezy portal, use the built-in demo billing page
+        if (isDemoBillingServer) {
+            return NextResponse.json({ url: "/dashboard/billing-demo" });
         }
 
         // Fetch the user's Lemon Squeezy Customer ID from your database
